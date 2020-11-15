@@ -21,7 +21,7 @@ body {
   background-color: white;
   box-shadow:  0 0 0 1px black;
   margin: 3em auto;
-  padding: 1in 1in 0 1in;
+  padding: 1in;
   display: flex;
   flex-direction: column;
 }
@@ -36,6 +36,7 @@ body {
 
 .page-footer {
   padding: 0.5in 0;
+  margin-bottom: -0.5in;
 }
 
 @page {

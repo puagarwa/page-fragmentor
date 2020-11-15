@@ -8,6 +8,7 @@
     "browser": true
   },
   "rules": {
+    "class-methods-use-this": "off",
     "import/prefer-default-export": "off",
     "import/no-default-export": "error",
     "no-restricted-syntax": "off",
