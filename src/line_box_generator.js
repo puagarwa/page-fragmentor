@@ -21,7 +21,8 @@ function hasMultipleLines(range) {
  * edge cases that cannot be accounted for.
  *
  * You could use logical progression, as in each DOMRect must follow the next to
- * the left, however with rtl characters they may follow to the right.  Additionally
+ * the left, however with rtl characters they may follow to the right and this cannot
+ * be determined without implementing complex Unicode algorithms.  Additionally
  * negative left or might margins means there maybe some overlap.
  *
  * Alternatively you can look for a DOMRect that is below the previous.  However,

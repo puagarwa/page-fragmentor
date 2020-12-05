@@ -1,36 +1,37 @@
 import { breakPointGenerator } from './break_point_generator';
 
 export function extractOverflow(root, config) {
-  const breakPointIterator = breakPointGenerator(root);
+  const breakPointIterator = breakPointGenerator(root, config);
 
   const breakPoints = [];
+  let overflowBreakPoint;
   for (const breakPoint of breakPointIterator) {
-    breakPoints.unshift(breakPoint);
     if (breakPoint.overflowing) {
+      overflowBreakPoint = breakPoint;
       break;
     }
-  }
-  if (!breakPoints[0]?.overflowing) {
-    return null;
-  }
-
-  // First with all rules
-  for (const breakPoint of breakPoints) {
-    if (breakPoint.overflowing) {
-      continue;
+    if (!breakPoint.overflowing && breakPoint.force) {
+      const extracted = breakPoint.extract(root);
+      if (extracted) {
+        return extracted;
+      }
     }
-    const range = breakPoint.range(root);
-    if (range) {
-      return range.extractContents();
-    }
+    breakPoints.unshift(breakPoint);
   }
 
-  // Allow overflow
-  for (const breakPoint of breakPoints) {
-    const range = breakPoint.range(root);
-    if (range) {
-      return range.extractContents();
+  // https://www.w3.org/TR/css-break-3/#unforced-breaks
+  for (const disableRules of [[], [3], [1, 3], [1, 2, 3], [1, 2, 3, 4]]) {
+    for (const breakPoint of breakPoints) {
+      const extracted = breakPoint.extract(root, disableRules);
+      if (extracted) {
+        return extracted;
+      }
     }
+  }
+
+  // Force next overflowing breakpoint
+  if (overflowBreakPoint) {
+    return breakPoints[0].extract(root, [1, 2, 3, 4]);
   }
   return null;
 }

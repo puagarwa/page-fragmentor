@@ -40,6 +40,8 @@ const types = NodeFilter.SHOW_ELEMENT + NodeFilter.SHOW_TEXT;
  */
 export function* saxGenerator(root, nodeFilter) {
   const walker = document.createTreeWalker(root, types, nodeFilter);
-  walker.nextNode();
+  if (!walker.nextNode()) {
+    return;
+  }
   yield* iterateLevel(walker);
 }

@@ -75,6 +75,14 @@ function getFooter() {
   return content;
 }
 
+function empty(node) {
+  return !node.hasChildNodes()
+    || (node.childNodes.length === 1
+      && node.firstChild.nodeType === Node.TEXT_NODE
+      && !node.firstChild.data.trim()
+    );
+}
+
 /**
  * Move the content into pages
  */
@@ -84,7 +92,7 @@ export function createPages({ rules = [] } = {}) {
   const footer = getFooter();
   let content = getStartingContent();
 
-  while (content?.hasChildNodes()) {
+  while (content && !empty(content)) {
     const page = newPage({ footer, header, meta });
     page.appendChild(content);
     content = extractOverflow(page, { rules });

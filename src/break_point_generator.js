@@ -22,10 +22,8 @@ import { NodeRules } from './node_rules';
  * - borders/padding/margin are never collapsed to prevent overflow: https://www.w3.org/TR/css-break-3/#unforced-breaks
  * - monolithic elements will not be split to prevent overflow
  *
- * @param {Iterator} iterator saxGenerator iterator instance
- * @param {Integer} options.widows default widow rule
- * @param {Integer} options.orphans default orphans rule
- * @param {Array} rules break rules
+ * @param {Element} root The element to generate break points inside
+ * @param {Object} config Config options
  */
 export function* breakPointGenerator(root, config) {
   const rectFilter = new RectFilter();
@@ -57,7 +55,9 @@ export function* breakPointGenerator(root, config) {
       }
     }
 
-    if (type === 'enter' || type === 'text') {
+    currentBreakPoint.add(node, rule);
+
+    if (type === 'enter' || (type === 'text' && currentBreakPoint.texts.length === 1)) {
       const rect = rectFilter.get(node);
       if (rect.top > rootRect.bottom) {
         currentBreakPoint.overflowing = true;
@@ -71,7 +71,6 @@ export function* breakPointGenerator(root, config) {
       }
     }
 
-    currentBreakPoint.add(node, rule);
     lastType = type;
   }
 

@@ -8,7 +8,7 @@ export class DisallowedBreakPoint extends BaseBreakPoint {
     // Ignore
   }
 
-  range() {
+  extract() {
     return null;
   }
 }

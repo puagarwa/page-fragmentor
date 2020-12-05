@@ -7,37 +7,46 @@ export class TextBreakPoint extends BaseBreakPoint {
     this.texts = [];
   }
 
-  add(node, { avoid, orphans, widows }) {
+  add(node, { inheritedAvoid, orphans, widows }) {
     this.texts.push(node);
-    this.avoid ??= avoid;
+    this.inheritedAvoid ??= inheritedAvoid;
     this.orphans ??= orphans;
     this.widows ??= widows;
   }
 
-  range(root) {
+  extract(root, disableRules = []) {
+    if (!disableRules.includes(4) && this.inheritedAvoid) {
+      return null;
+    }
     const rootRect = root.getBoundingClientRect();
     const lineBoxes = [];
     let overflow = false;
+    let overflowIndex;
+    let { widows, orphans } = this;
+    if (disableRules.includes(3)) {
+      widows = 0;
+      orphans = 0;
+    }
     for (const lineBox of lineBoxGenerator(this.texts)) {
       if (!overflow) {
         const rect = lineBox.getBoundingClientRect();
         if (rect.bottom > rootRect.bottom) {
           overflow = lineBox;
-          break;
+          overflowIndex = lineBoxes.length;
         }
       }
-      if (overflow && lineBoxes.length >= this.widows + this.orphans) {
+      if (overflow && lineBoxes.length > overflowIndex + widows) {
         break;
       }
       lineBoxes.push(lineBox);
     }
 
     let lastLineBox;
-    for (const lineBox of lineBoxes.slice(this.orphans, -this.widows || undefined)) {
+    for (const lineBox of lineBoxes.slice(orphans, -widows || undefined)) {
+      lastLineBox = lineBox;
       if (lineBox === overflow) {
         break;
       }
-      lastLineBox = lineBox;
     }
 
     if (!lastLineBox) {
@@ -45,8 +54,8 @@ export class TextBreakPoint extends BaseBreakPoint {
     }
 
     const range = new Range();
-    range.setEndAfter(root.lastChild);
     range.setStart(lastLineBox.startContainer, lastLineBox.startOffset);
-    return range;
+    range.setEndAfter(root.lastChild);
+    return this.extractWithTHead(range);
   }
 }

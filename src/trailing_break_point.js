@@ -3,7 +3,10 @@ import { BaseBreakPoint } from './base_break_point';
 export class TrailingBreakPoint extends BaseBreakPoint {
   add(node, { inheritedAvoid, breakAfter }) {
     this.node = node;
-    if (inheritedAvoid || breakAfter === 'avoid') {
+    if (inheritedAvoid) {
+      this.inheritedAvoid = true;
+    }
+    if (breakAfter === 'avoid') {
       this.avoid = true;
     }
     if (breakAfter === 'page') {
@@ -11,10 +14,17 @@ export class TrailingBreakPoint extends BaseBreakPoint {
     }
   }
 
-  range(root) {
+  extract(root, disableRules = []) {
+    if (!disableRules.includes(2) && this.inheritedAvoid) {
+      return null;
+    }
+    if (!disableRules.includes(1) && this.avoid) {
+      return null;
+    }
+
     const range = new Range();
-    range.setEndAfter(root.lastChild);
     range.setStartAfter(this.node);
-    return range;
+    range.setEndAfter(root.lastChild);
+    return this.extractWithTHead(range);
   }
 }
