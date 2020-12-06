@@ -13,24 +13,27 @@ function newPage({ footers, headers, pageNumber }) {
   page.setAttribute('data-paged-page-number', pageNumber);
   page.style.setProperty('--paged-page-number', pageNumber);
   document.body.appendChild(page);
+  const pageInner = document.createElement('div');
+  pageInner.classList.add('page-inner');
+  page.appendChild(pageInner);
 
   const header = findForPage(headers, pageNumber);
   if (header) {
     const pageHeader = document.createElement('div');
     pageHeader.classList.add('page-header');
-    page.appendChild(pageHeader);
+    pageInner.appendChild(pageHeader);
     pageHeader.appendChild(header.cloneNode(true));
   }
 
   const pageContent = document.createElement('div');
   pageContent.classList.add('page-content');
-  page.appendChild(pageContent);
+  pageInner.appendChild(pageContent);
 
   const footer = findForPage(footers, pageNumber);
   if (footer) {
     const pageFooter = document.createElement('div');
     pageFooter.classList.add('page-footer');
-    page.appendChild(pageFooter);
+    pageInner.appendChild(pageFooter);
     pageFooter.appendChild(footer.cloneNode(true));
   }
   return pageContent;
@@ -86,4 +89,9 @@ export function createPages({ rules = [] } = {}) {
   }
 
   document.body.style.setProperty('--paged-page-count', pageCount);
+  document.body.hidden = true;
+  // Forces safari to update the counters
+  setTimeout(() => {
+    document.body.hidden = false;
+  }, 0);
 }
