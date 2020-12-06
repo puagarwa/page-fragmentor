@@ -1,18 +1,12 @@
 import { extractOverflow } from './extract_overflow';
 
-function replacePlaceholders(node, name, value) {
-  node.querySelectorAll(`[data-placeholder="${CSS.escape(name)}"]`).forEach((placeholder) => {
-    placeholder.textContent = value; // eslint-disable-line no-param-reassign
-  });
-}
-
-function newPage({ footer, header, meta }) {
-  meta.pages += 1; // eslint-disable-line no-param-reassign
-
+function newPage({ footer, header, pageNumber }) {
   const page = document.createElement('div');
   page.classList.add('page');
   page.setAttribute('role', 'region');
-  page.setAttribute('aria-label', `Page ${meta.pages}`);
+  page.setAttribute('aria-label', `Page ${pageNumber}`);
+  page.setAttribute('data-paged-page-number', pageNumber);
+  page.style.setProperty('--paged-page-number', pageNumber);
   document.body.appendChild(page);
 
   if (header) {
@@ -20,7 +14,6 @@ function newPage({ footer, header, meta }) {
     pageHeader.classList.add('page-header');
     page.appendChild(pageHeader);
     pageHeader.appendChild(header.cloneNode(true));
-    replacePlaceholders(pageHeader, 'pageNumber', meta.pages);
   }
 
   const pageContent = document.createElement('div');
@@ -32,7 +25,6 @@ function newPage({ footer, header, meta }) {
     pageFooter.classList.add('page-footer');
     page.appendChild(pageFooter);
     pageFooter.appendChild(footer.cloneNode(true));
-    replacePlaceholders(pageFooter, 'pageNumber', meta.pages);
   }
   return pageContent;
 }
@@ -87,15 +79,17 @@ function empty(node) {
  * Move the content into pages
  */
 export function createPages({ rules = [] } = {}) {
-  const meta = { pages: 1 };
   const header = getHeader();
   const footer = getFooter();
   let content = getStartingContent();
+  let pageCount = 0;
 
   while (content && !empty(content)) {
-    const page = newPage({ footer, header, meta });
+    pageCount += 1;
+    const page = newPage({ footer, header, pageNumber: pageCount });
     page.appendChild(content);
     content = extractOverflow(page, { rules });
   }
-  replacePlaceholders(document.body, 'pageCount', meta.pages);
+
+  document.body.style.setProperty('--paged-page-count', pageCount);
 }

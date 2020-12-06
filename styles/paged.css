@@ -39,6 +39,11 @@ body {
   margin-bottom: -0.5in;
 }
 
+.page-count::after {
+  counter-set: pagecount var(--paged-page-count) pagenumber var(--paged-page-number);
+  content: counter(pagenumber) " of " counter(pagecount);
+}
+
 @page {
   size: A4 portrait;
   margin: 1in 1in 0.5in 1in;
