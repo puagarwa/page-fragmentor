@@ -25,11 +25,11 @@ import { NodeRules } from './node_rules';
  * @param {Element} root The element to generate break points inside
  * @param {Object} config Config options
  */
-export function* breakPointGenerator(root, config) {
+export function* breakPointGenerator(root) {
   const rectFilter = new RectFilter();
   const saxIterator = saxGenerator(root, rectFilter);
   const rootRect = root.getBoundingClientRect();
-  const nodeRules = new NodeRules(config);
+  const nodeRules = new NodeRules();
 
   let currentBreakPoint;
   let lastType;

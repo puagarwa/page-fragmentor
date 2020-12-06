@@ -1,11 +1,4 @@
 export class NodeRules extends Map {
-  constructor({ defaultWidows = 2, defaultOrphans = 2, rules = [] } = {}) {
-    super();
-    this.rules = rules;
-    this.defaultWidows = defaultWidows;
-    this.defaultOrphans = defaultOrphans;
-  }
-
   get(node) {
     if (node instanceof Text) {
       return this.get(node.parentNode);
@@ -13,8 +6,8 @@ export class NodeRules extends Map {
     if (!(node instanceof Element)) {
       return {
         inheritedAvoid: false,
-        orphans: this.defaultOrphans,
-        widows: this.defaultWidows,
+        orphans: 2,
+        widows: 2,
       };
     }
     if (this.has(node)) {
@@ -26,17 +19,14 @@ export class NodeRules extends Map {
   }
 
   findInheritedRule(node) {
-    const rule = this.findRule(node);
     const parentRule = this.get(node.parentNode);
+    const styles = window.getComputedStyle(node);
     return {
-      ...rule,
-      inheritedAvoid: rule.breakInside === 'avoid' || parentRule.avoid,
-      orphans: rule.orphans ?? parentRule.orphans,
-      widows: rule.widows ?? parentRule.widows,
+      inheritedAvoid: ['avoid', 'avoid-page'].includes(styles.getPropertyValue('break-inside')) || parentRule.inheritedAvoid,
+      breakAfter: styles.getPropertyValue('break-after'),
+      breakBefore: styles.getPropertyValue('break-before'),
+      orphans: parseInt(styles.getPropertyValue('--orphans') || styles.getPropertyValue('orphans') || 2, 10),
+      widows: parseInt(styles.getPropertyValue('--widows') || styles.getPropertyValue('widows') || 2, 10),
     };
-  }
-
-  findRule(node) {
-    return this.rules.find(({ selector }) => node.matches(selector)) ?? {};
   }
 }

@@ -6,7 +6,7 @@ export class LeadingBreakPoint extends BaseBreakPoint {
     if (inheritedAvoid) {
       this.inheritedAvoid = true;
     }
-    if (breakBefore === 'avoid') {
+    if (['avoid', 'avoid-page'].includes(breakBefore)) {
       this.avoid = true;
     }
     if (breakBefore === 'page') {

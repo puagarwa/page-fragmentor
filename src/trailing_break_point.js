@@ -6,7 +6,7 @@ export class TrailingBreakPoint extends BaseBreakPoint {
     if (inheritedAvoid) {
       this.inheritedAvoid = true;
     }
-    if (breakAfter === 'avoid') {
+    if (['avoid', 'avoid-page'].includes(breakAfter)) {
       this.avoid = true;
     }
     if (breakAfter === 'page') {

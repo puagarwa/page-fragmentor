@@ -4,15 +4,13 @@
   <meta charset="utf-8">
   <title>Page layout test</title>
   <link href="../../styles/paged.css" rel="stylesheet">
-  <meta name="paged-config" content='
-    {
-      "rules": [
-        { "selector": "h2", "breakBefore": "page" }
-      ]
-    }
-  '>
   </script>
   <script src="../../src/index.js"></script>
+  <style>
+    h2 {
+      break-before: page;
+    }
+  </style>
 <body>
 <header>
   <h1>THE MACHINE STOPS</h1>
