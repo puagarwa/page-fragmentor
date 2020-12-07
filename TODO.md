@@ -1,9 +1,10 @@
 # TODO
 
+- fix tables are hidden?
 - last page header and footer
-- better handling of margins
 
 - Better library name
+- Check data and var names
 - Tests for different rules
 - cache rootRect
 - linebox performance

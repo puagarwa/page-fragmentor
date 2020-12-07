@@ -2,74 +2,105 @@ html {
   font: 1em/1.5 sans-serif;
   margin: 0;
   padding: 0;
+  /* defaults */
+  --page-size: A4 landscape;
+  --page-margin: 1in;
+  --orphans: 2;
+  --widows: 2;
 }
 
 body {
   background-color: #ddd;
   margin: 0;
   padding: 0;
+  /* override `--page-size` here */
 }
 
 * {
+  /* Force specified font size on iOS */
   -webkit-text-size-adjust: none;
 }
 
+/* Wrapper for each page */
 .page {
   background-color: white;
   box-shadow:  inset 0 0 0 1px black;
   margin: 3em auto;
-  display: table; /* take size of inner */
+  /* Take size of .page-inner */
+  display: table;
 }
 
+/* Sets the dimension of the page. Print margins are the padding */
 .page-inner {
-  width: 210mm;
-  height: 297mm;
+  /* The JS sets `--page-width` and `--page-height` by reading `--page-size`*/
+  width: var(--page-width);
+  height: var(--page-height);
   box-sizing: border-box;
-  padding: 1in 1in 0.5in 1in; /* the page margins */
+  padding: var(--page-margin);
+  /* Layout header, content and footer */
   display: flex;
   flex-direction: column;
   overflow: hidden;
   flex-grow: 1;
 }
 
+/* The wrapper for a header */
 .page-header {
 }
 
+/* The wrapper for the main content */
 .page-content {
   overflow: hidden;
+  /* Fill space not taken by the header and footer */
   flex-grow: 1;
 }
 
+/* The wrapper for a footer */
 .page-footer {
-  padding-top: 0.5in;
 }
 
+/* Inserts a page count */
+/* The JS will set `--page-count` on the body and `--page-number` on the pages */
+/* Warning: Safari sometimes fails to update counters without a forced re-render */
+/* https://chenhuijing.com/blog/the-wondrous-world-of-css-counters */
 .page-count::after {
-  counter-reset: pagecount var(--paged-page-count) pagenumber var(--paged-page-number);
+  /* You must set the counters. Safari does not support counter-set */
+  counter-reset: pagecount var(--page-count) pagenumber var(--page-number);
   content: counter(pagenumber) " of " counter(pagecount);
 }
 
 @page {
-  size: A4 portrait;
+  /* Default size */
+  size: var(--page-size);
+  /* Margins are set on .page-content  */
   margin: 0;
 }
 
+/* Warning: Safari does not support @page { margin }.  The pages will print with larger margins */
+/* Warning: Firefox does not support @page :first */
+
 @media print {
   body {
+    /* Make transparent so PDF pages can be combined with a watermark or background */
     background-color: transparent;
   }
 
+  /* Remove all previously set breakpoints or you will get additional fragmentation when printing */
   * {
     break-before: auto !important;
     break-after: auto !important;
   }
 
+  /* This sets each `.page` to be entirely contained on one printed page and to not overflow */
+  /* As long as the dimensions match the printer everything should come out the expected size */
   .page {
+    /* Remove on screen presentation */
     box-shadow: none;
     margin: 0 !important;
     /* Force each page on a separate page */
     break-after: page !important;
-    /* Prevent pages overflowing onto two pages.  Some browsers will draw the pages slightly too large */
+    /* Prevent pages overflowing onto two pages. */
+    /* Some browsers may draw a page marginally too large, but as long as it doesn't overflow onto a second printed page this doesn't matter */
     height: 1px;
     display: block;
     /* Ensure the page content is printed */
