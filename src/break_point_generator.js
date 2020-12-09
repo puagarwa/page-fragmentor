@@ -43,13 +43,15 @@ export function* breakPointGenerator(root) {
         yield currentBreakPoint;
       }
 
-      if (!currentBreakPoint) {
-        // The first break point is never allowed or you get infinite loops
-        currentBreakPoint = new DisallowedBreakPoint();
-      } else if (type === 'text') {
+      if (type === 'text') {
         currentBreakPoint = new TextBreakPoint();
       } else if (type === 'enter') {
-        currentBreakPoint = new LeadingBreakPoint();
+        if (!currentBreakPoint) {
+          // The first leading break point is never allowed or you get infinite loops
+          currentBreakPoint = new DisallowedBreakPoint();
+        } else {
+          currentBreakPoint = new LeadingBreakPoint();
+        }
       } else if (type === 'exit') {
         currentBreakPoint = new TrailingBreakPoint();
       }

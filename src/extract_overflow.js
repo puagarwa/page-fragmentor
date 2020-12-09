@@ -1,7 +1,7 @@
 import { breakPointGenerator } from './break_point_generator';
 
-export function extractOverflow(root, config) {
-  const breakPointIterator = breakPointGenerator(root, config);
+export function extractOverflow(root) {
+  const breakPointIterator = breakPointGenerator(root);
 
   const breakPoints = [];
   let overflowBreakPoint;

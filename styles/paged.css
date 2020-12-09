@@ -3,17 +3,17 @@ html {
   margin: 0;
   padding: 0;
   /* defaults */
-  --page-size: A4 landscape;
+  --page-size: A4 portrait;
   --page-margin: 1in;
   --orphans: 2;
   --widows: 2;
+  /* `--page-width` and `--page-height` will be set by the JS from `--page-size` */
 }
 
 body {
   background-color: #ddd;
   margin: 0;
   padding: 0;
-  /* override `--page-size` here */
 }
 
 * {
@@ -78,6 +78,7 @@ body {
 
 /* Warning: Safari does not support @page { margin }.  The pages will print with larger margins */
 /* Warning: Firefox does not support @page :first */
+/* Warning: Browsers might not set the actual print size in the printer dialog */
 
 @media print {
   body {

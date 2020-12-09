@@ -15,7 +15,7 @@ export class BaseBreakPoint {
       if (!table.tHead) {
         return;
       }
-      const newTable = contents.querySelector(`table[data-paged-table="${table.dataset.pagedTable}"]`);
+      const newTable = contents.querySelector(`table[data-table-uuid="${table.dataset.pagedTable}"]`);
       if (newTable && !newTable.tHead) {
         newTable.tHead = table.tHead.cloneNode(true);
       }
@@ -31,7 +31,7 @@ export class BaseBreakPoint {
     }
     cursor = cursor.closest('table');
     while (cursor) {
-      cursor.dataset.pagedTable = uuidv4();
+      cursor.dataset.tableUuid = uuidv4();
       tables.push(cursor);
       cursor = cursor.parentNode.closest('table');
     }
