@@ -38,7 +38,7 @@ as the fragmentation is calculated one page at a time, and the current page in t
 
 Avoid modifying `.page` or `.page-inner` without reading the notes in the CSS as you may break everything.
 
-`data-page-last="true"` is added to the final page.  If adding this caused overflow, an additional page will be added.
+`data-last-page="true"` is added to the final page.  If adding this caused overflow, an additional page will be added.
 
 ```html
 <body data-page-count="3" style="--var-page-count:3;">
@@ -56,7 +56,7 @@ Avoid modifying `.page` or `.page-inner` without reading the notes in the CSS as
       <div class="page-footer"></div> <!-- Optional -->
     </div>
   </div>
-  <div class="page" data-page-last="true" data-page-number="3" style="--var-page-number:3;">
+  <div class="page" data-last-page="true" data-page-number="3" style="--var-page-number:3;">
     <div class="page-inner">
       <div class="page-header"></div> <!-- Optional -->
       <div class="page-content"></div>
@@ -106,30 +106,13 @@ body {
 ### Headers and footers
 
 You may set headers and footer by included `<header>` and `<footer>` elements that are direct children of `<body>`.
+These will be cloned onto each page.
 
-Use the data attribute `data-page-selector` on these elements to select which pages they should appear on.  This
-should be a comma separated list of an+b selectors.  These are matched in document order, using the first matching. So
-order them most specific to least specific.
+If you want to vary the headers and footers on each page, use CSS to show and hide content.  For example
+`.page::not(nth-child(even)) .page-header .even-content { display: none}` will hide content on even pages.
 
-```html
-<header data-page-selector="1">
-  Header content for first page
-</header>
-
-<header data-page-selector="last">
-  "last" will place this on the last page where no fragmentation is required.
-  If this results in fragmentation, an additional page will be generated as the
-  last page that will (probably) have only a header and/or footer.
-</header>
-
-<header data-page-selector="even">
-  Header content for even pages
-</header>
-
-<header>
-  Header content for remaining pages
-</header>
-```
+The selector `.page[data-last-page="true"]` will select content on the last page.
+This may result in an additional empty page with only headers and footers.
 
 ### Page numbers
 

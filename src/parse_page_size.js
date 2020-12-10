@@ -1,7 +1,4 @@
-const rNamedSize = '(A5|A4|A3|B5|B4|JIS-B5|JIS-B4|letter|legal|ledger)';
-const rNumber = '((?:\\d*\\.)?\\d+(?:[eE]\\d+)?(?:px|cm|mm|in|pc|pt))';
-const rOrientation = '(landscape|portrait)';
-const rSize = new RegExp(`^(?:${rNamedSize}(?:\\s+${rOrientation})?)|(?:${rNumber}(?:\\s+${rNumber})?)$`);
+const rNamedSize = /^(A5|A4|A3|B5|B4|JIS-B5|JIS-B4|letter|legal|ledger|landscape|portrait)(?:\s+(landscape|portrait)$)?/;
 
 const SIZES = {
   A5: ['148mm', '210mm'],
@@ -22,19 +19,22 @@ export function parsePageSize(size) {
   if (!size || size === 'auto') {
     return SIZES.A4;
   }
-  const match = rSize.exec(size);
+  const match = rNamedSize.exec(size);
   if (!match) {
-    throw new Error(`${size} is not a usable page size`);
-  }
-  const [, namedSize, orientation, width, height] = match;
-
-  if (namedSize) {
-    const matchedSize = SIZES[namedSize];
-    if (orientation === 'landscape') {
-      return [...matchedSize].reverse();
+    const parts = size.split(/\s+/);
+    if (parts.length === 1) {
+      parts.push(parts[0]);
     }
-    return matchedSize;
+    return parts;
   }
-
-  return [width, height || width];
+  let [, namedSize, orientation] = match;
+  if (['portrait', 'landscape'].includes(namedSize)) {
+    orientation = namedSize;
+    namedSize = 'A4';
+  }
+  const matchedSize = [...SIZES[namedSize]];
+  if (orientation === 'landscape') {
+    matchedSize.reverse();
+  }
+  return matchedSize;
 }

@@ -12,6 +12,18 @@
     "import/prefer-default-export": "off",
     "import/no-default-export": "error",
     "no-restricted-syntax": "off",
-    "no-continue": "off"
-  }
+    "no-continue": "off",
+    "object-curly-newline": ["error", { "consistent": true }]
+  },
+  "overrides": [
+    {
+      "files": ["**/*.test.{js,jsx}"],
+      "env": {
+        "jest": true
+      },
+      "plugins": [
+        "jest"
+      ]
+    }
+  ]
 }

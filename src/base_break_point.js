@@ -1,4 +1,4 @@
-import { uuidv4 } from './uuid4';
+import { uuid } from './uuid';
 
 export class BaseBreakPoint {
   constructor() {
@@ -31,7 +31,7 @@ export class BaseBreakPoint {
     }
     cursor = cursor.closest('table');
     while (cursor) {
-      cursor.dataset.tableUuid = uuidv4();
+      cursor.dataset.tableUuid = uuid();
       tables.push(cursor);
       cursor = cursor.parentNode.closest('table');
     }
