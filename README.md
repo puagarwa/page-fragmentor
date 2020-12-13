@@ -130,12 +130,12 @@ the css file for how to customise.
 
 ### Page breaks
 
-Page break settings are read from computed CSS values.
+Page break settings are read from computed CSS values using `window.getComputedStyle`.
 
 **Do not**:
 
-- place these inside `@page` as these cannot be read.
-- set breaks rules using `!important` (see the CSS for why).
+- place these inside `@page` as these cannot be read by by `window.getComputedStyle`.
+- set breaks rules using `!important` as this is used in `@page` to prevent addition
 
 Supported properties:
 
@@ -146,11 +146,6 @@ Supported properties:
 - `orphans`: Firefox does not support orphans, use `--orphans` instead. Default is 2.
 
 If the content is broken across a table any `<thead>` will be cloned.
-
-If your line-height is too small you may find pages will not break within text.
-
-If your paragraphs have text hanging below the line you may find text breaking at
-unexpected places.
 
 ## Fragmentation algorithm
 
@@ -165,8 +160,6 @@ This uses a limited implementation of the [CSS fragmentation module 3][6]
 - margins, borders and padding are not [collapsed to prevent overflow][8]
 - monolithic elements are not split to prevent overflow
 - if no valid break-point is found the content will overflow off the page
-- a new text line-box is determined to have started when `getClientRects` finds a DOMRect whose top is below the bottom of all previous
-  DOMRects. This may fail to recognise new lines for closely packed text
 - if is probably buggy
 
 [1]: https://thecodingmachine.github.io/gotenberg/

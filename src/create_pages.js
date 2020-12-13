@@ -114,9 +114,4 @@ export function createPages() {
   }
 
   document.body.style.setProperty('--page-count', pageCount);
-  document.body.hidden = true;
-  // Forces safari to update the counters
-  setTimeout(() => {
-    document.body.hidden = false;
-  }, 0);
 }
