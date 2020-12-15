@@ -1,9 +1,9 @@
 import { saxGenerator } from './sax_generator';
 import { RectFilter } from './rect_filter';
-import { TextBreakPoint } from './text_break_point';
-import { LeadingBreakPoint } from './leading_break_point';
-import { TrailingBreakPoint } from './trailing_break_point';
-import { DisallowedBreakPoint } from './disallowed_break_point';
+import { TextBreakPoint } from './break_points/text_break_point';
+import { LeadingBreakPoint } from './break_points/leading_break_point';
+import { TrailingBreakPoint } from './break_points/trailing_break_point';
+import { DisallowedBreakPoint } from './break_points/disallowed_break_point';
 import { NodeRules } from './node_rules';
 
 /**

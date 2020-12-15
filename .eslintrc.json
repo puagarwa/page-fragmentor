@@ -9,10 +9,10 @@
   },
   "rules": {
     "class-methods-use-this": "off",
-    "import/prefer-default-export": "off",
     "import/no-default-export": "error",
-    "no-restricted-syntax": "off",
+    "import/prefer-default-export": "off",
     "no-continue": "off",
+    "no-restricted-syntax": "off",
     "object-curly-newline": ["error", { "consistent": true }]
   },
   "overrides": [
@@ -23,6 +23,9 @@
       },
       "plugins": [
         "jest"
+      ],
+      "extends": [
+        "plugin:jest-playwright/recommended"
       ]
     }
   ]

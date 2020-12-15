@@ -142,8 +142,8 @@ Supported properties:
 - `break-before`: supports `auto`, `avoid` and `page`. Other values will be treated as `auto`.
 - `break-after`: supports `auto`, `avoid` and `page`. Other values will be treated as `auto`.
 - `break-inside`: supports `auto` and `avoid`. Other values will be treated as `auto`.
-- `widows`: Firefox does not support widows, use `--widows` instead. Default is 2.
-- `orphans`: Firefox does not support orphans, use `--orphans` instead. Default is 2.
+- `widows`: Firefox does not support widows, use `--widows` instead. Default is 2. The value must be >= 1
+- `orphans`: Firefox does not support orphans, use `--orphans` instead. Default is 2. The value must be >= 1
 
 If the content is broken across a table any `<thead>` will be cloned.
 

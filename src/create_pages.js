@@ -1,5 +1,6 @@
-import { extractOverflow } from './extract_overflow';
+import { overflowRange } from './overflow_range';
 import { parsePageSize } from './parse_page_size';
+import { extractWithClonedTHead } from './extract_with_cloned_thead';
 
 function newPage({ footer, header, pageNumber }) {
   const page = document.createElement('div');
@@ -56,7 +57,7 @@ function extractSelector(selector) {
   return null;
 }
 
-function empty(node) {
+function emptyFragment(node) {
   return !node.hasChildNodes()
     || (node.childNodes.length === 1
       && node.firstChild.nodeType === Node.TEXT_NODE
@@ -64,8 +65,11 @@ function empty(node) {
     );
 }
 
-function overflowing(page) {
-  return page.offsetHeight < page.scrollHeight;
+function emptyRange(range) {
+  if (!range || range.collapsed) {
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -83,7 +87,7 @@ export function createPages() {
   let pageCount = 0;
   let forceExtraPage = false;
 
-  while (content && (!empty(content) || forceExtraPage)) {
+  while (content && (!emptyFragment(content) || forceExtraPage)) {
     pageCount += 1;
 
     const page = newPage({ footer, header, pageNumber: pageCount });
@@ -91,26 +95,24 @@ export function createPages() {
       page.appendChild(content);
     }
 
-    // No overflow, so it the last page
-    if (!overflowing(page) || forceExtraPage) {
+    const range = overflowRange(page);
+
+    if (emptyRange(range)) {
+      // Last page
       page.closest('.page').dataset.lastPage = 'true';
 
-      // The footer / header caused overflow, force an extra page
-      if (overflowing(page) && !forceExtraPage) {
+      if (!emptyRange(overflowRange(page))) {
+        // Need to force an extra page
         delete page.closest('.page').dataset.lastPage;
         forceExtraPage = true;
-      } else {
-        break;
       }
     }
 
-    content = extractOverflow(page);
-
-    // No breakpoint was found so actually the last page
-    if (!forceExtraPage && empty(content)) {
-      page.closest('.page').dataset.lastPage = 'true';
+    if (forceExtraPage) {
       break;
     }
+
+    content = range ? extractWithClonedTHead(range) : null;
   }
 
   document.body.style.setProperty('--page-count', pageCount);

@@ -14,7 +14,7 @@ export class TrailingBreakPoint extends BaseBreakPoint {
     }
   }
 
-  extract(root, disableRules = []) {
+  range(root, disableRules = []) {
     if (!disableRules.includes(2) && this.inheritedAvoid) {
       return null;
     }
@@ -25,6 +25,6 @@ export class TrailingBreakPoint extends BaseBreakPoint {
     const range = new Range();
     range.setStartAfter(this.node);
     range.setEndAfter(root.lastChild);
-    return this.extractWithTHead(range);
+    return range;
   }
 }

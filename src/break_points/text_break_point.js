@@ -1,5 +1,5 @@
 import { BaseBreakPoint } from './base_break_point';
-import { lineBoxGenerator } from './line_box_generator';
+import { lineBoxGenerator } from '../line_box_generator';
 
 export class TextBreakPoint extends BaseBreakPoint {
   constructor() {
@@ -14,18 +14,27 @@ export class TextBreakPoint extends BaseBreakPoint {
     this.widows ??= widows;
   }
 
-  extract(root, disableRules = []) {
+  range(root, disableRules = []) {
     if (!disableRules.includes(4) && this.inheritedAvoid) {
       return null;
     }
     const rootRect = root.getBoundingClientRect();
-    const lineBoxes = [];
+    let lineBoxes = [];
     let overflow = false;
     let overflowIndex;
     let { widows, orphans } = this;
+
+    // Values less than one must be ignored.
+    // as we are using CSS variables, revert to the default
+    if (widows < 1) {
+      widows = 2;
+    }
+    if (orphans < 1) {
+      orphans = 2;
+    }
     if (disableRules.includes(3)) {
-      widows = 0;
-      orphans = 0;
+      widows = 1;
+      orphans = 1;
     }
     for (const lineBox of lineBoxGenerator(this.texts)) {
       if (!overflow) {
@@ -41,12 +50,20 @@ export class TextBreakPoint extends BaseBreakPoint {
       lineBoxes.push(lineBox);
     }
 
+    if (orphans) {
+      lineBoxes = lineBoxes.slice(orphans);
+    }
+
+    if (widows > 1) {
+      lineBoxes = lineBoxes.slice(0, -widows + 1);
+    }
+
     let lastLineBox;
-    for (const lineBox of lineBoxes.slice(orphans, -widows || undefined)) {
-      lastLineBox = lineBox;
+    for (const lineBox of lineBoxes) {
       if (lineBox === overflow) {
         break;
       }
+      lastLineBox = lineBox;
     }
 
     if (!lastLineBox) {
@@ -56,6 +73,6 @@ export class TextBreakPoint extends BaseBreakPoint {
     const range = new Range();
     range.setStart(lastLineBox.startContainer, lastLineBox.startOffset);
     range.setEndAfter(root.lastChild);
-    return this.extractWithTHead(range);
+    return range;
   }
 }

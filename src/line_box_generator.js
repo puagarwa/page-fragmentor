@@ -8,8 +8,8 @@
  */
 export function* lineBoxGenerator(texts) {
   const textRange = new Range();
-  textRange.setStartBefore(texts[0]);
-  textRange.setEndAfter(texts[texts.length - 1]);
+  textRange.setStart(texts[0], 0);
+  textRange.setEnd(texts[texts.length - 1], texts[texts.length - 1].data.length);
 
   const selection = window.getSelection();
 
@@ -35,11 +35,6 @@ export function* lineBoxGenerator(texts) {
 
     if (textRange.compareBoundaryPoints(Range.END_TO_END, lineRange) === 0) {
       break;
-    }
-
-    if (lastRange && lineRange.compareBoundaryPoints(Range.START_TO_START, lastRange) === 0) {
-      console.log(lineRange.toString());
-      console.log(lastRange.toString());
     }
 
     lastRange = lineRange.cloneRange();
