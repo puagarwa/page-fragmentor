@@ -71,6 +71,11 @@ body {
   content: counter(pagenumber) " of " counter(pagecount);
 }
 
+/* Stops tables adjusting their layout after being split as this can cause overflow */
+.fix-table-layout {
+  table-layout: fixed !important;
+}
+
 @page {
   /* Default size */
   size: var(--page-size);

@@ -9,6 +9,7 @@ function findAndMarkTables(range) {
   cursor = cursor.closest('table');
   while (cursor) {
     cursor.dataset.tableUuid = uuid();
+    cursor.classList.add('fix-table-layout');
     tables.push(cursor);
     cursor = cursor.parentNode.closest('table');
   }
@@ -25,6 +26,7 @@ export function extractWithClonedTHead(range) {
     const newTable = contents.querySelector(`table[data-table-uuid="${table.dataset.tableUuid}"]`);
     if (newTable && !newTable.tHead) {
       newTable.tHead = table.tHead.cloneNode(true);
+      newTable.classList.remove('fix-table-layout');
     }
   });
   return contents;
