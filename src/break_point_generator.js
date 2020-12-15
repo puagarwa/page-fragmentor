@@ -21,9 +21,6 @@ import { NodeRules } from './node_rules';
  * - box-decoration-break is not supported.  All borders/padding/margin are cloned
  * - borders/padding/margin are never collapsed to prevent overflow: https://www.w3.org/TR/css-break-3/#unforced-breaks
  * - monolithic elements will not be split to prevent overflow
- *
- * @param {Element} root The element to generate break points inside
- * @param {Object} config Config options
  */
 export function* breakPointGenerator(root) {
   const rectFilter = new RectFilter();

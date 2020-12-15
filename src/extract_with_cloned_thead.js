@@ -16,6 +16,12 @@ function findAndMarkTables(range) {
   return tables;
 }
 
+/**
+ * Extract a range
+ * If the range is part of a table
+ *   - Clone headers
+ *   - Switch the table to a fixed layout
+ */
 export function extractWithClonedTHead(range) {
   const tables = findAndMarkTables(range);
   const contents = range.extractContents();

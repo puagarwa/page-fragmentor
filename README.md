@@ -160,6 +160,7 @@ This uses a limited implementation of the [CSS fragmentation module 3][6]
 - margins, borders and padding are not [collapsed to prevent overflow][8]
 - monolithic elements are not split to prevent overflow
 - if no valid break-point is found the content will overflow off the page
+- There is no support for automated hyphenation.  If you enable `hypens` they will not be added across page breaks.
 - if is probably buggy
 
 [1]: https://thecodingmachine.github.io/gotenberg/
