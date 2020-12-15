@@ -21,7 +21,7 @@ export class TextBreakPoint extends BaseBreakPoint {
     this.texts = [];
   }
 
-  add(node, { inheritedAvoid, orphans, widows }) {
+  addText(node, { inheritedAvoid, orphans, widows }) {
     this.texts.push(node);
     this.inheritedAvoid ??= inheritedAvoid;
     this.orphans ??= orphans;

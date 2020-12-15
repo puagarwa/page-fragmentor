@@ -1,11 +1,33 @@
 import { BaseBreakPoint } from './base_break_point';
 
-export class TrailingBreakPoint extends BaseBreakPoint {
-  add(node, { inheritedAvoid, breakAfter }) {
-    this.node = node;
+export class SiblingBreakPoint extends BaseBreakPoint {
+  constructor() {
+    super();
+    this.lastTrailingNode = null;
+  }
+
+  addLeading(node, { inheritedAvoid, breakBefore }) {
+    this.node ??= this.lastTrailingNode;
+
     if (inheritedAvoid) {
       this.inheritedAvoid = true;
     }
+
+    if (['avoid', 'avoid-page'].includes(breakBefore)) {
+      this.avoid = true;
+    }
+    if (breakBefore === 'page') {
+      this.force = true;
+    }
+  }
+
+  addTrailing(node, { inheritedAvoid, breakAfter }) {
+    this.lastTrailingNode = node;
+
+    if (inheritedAvoid) {
+      this.inheritedAvoid = true;
+    }
+
     if (['avoid', 'avoid-page'].includes(breakAfter)) {
       this.avoid = true;
     }
@@ -15,6 +37,9 @@ export class TrailingBreakPoint extends BaseBreakPoint {
   }
 
   range(root, disableRules = []) {
+    if (!this.node) {
+      return null;
+    }
     if (!disableRules.includes(2) && this.inheritedAvoid) {
       return null;
     }

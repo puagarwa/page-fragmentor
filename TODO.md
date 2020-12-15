@@ -1,5 +1,8 @@
 # TODO
 
+- Fix - Class A break points are only between siblings
+- Fix - No fragmentation between td
+
 - Test pages
   - orphans - done
   - widows - done
@@ -8,6 +11,10 @@
   - force - done
   - avoid - need more
   - rules
+   - rule 3 done
+   - rule 1,3 
+   - rule 1,2,3
+   - rule 1,2,3,4
 
 - widows / orphans for an empty BR
 

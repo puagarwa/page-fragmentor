@@ -149,19 +149,24 @@ If the content is broken across a table any `<thead>` will be cloned.
 
 ## Fragmentation algorithm
 
-This uses a limited implementation of the [CSS fragmentation module 3][6]
+The fragmentation algorithm is loosely based on the [CSS fragmentation module 3][6]
 
-- fragmentation is processed in document order breaking on the first valid break point before an overflowing element
-- no special consideration is given to tables, columns, float, grid or flexbox
+- breakpoints may occur between sibling nodes, or between text line-boxes
+- the document is processed in document order.
+  A forced breakpoint is immediately used.
+  If an overflowing element is found the algorithm works backwards to find the first allowed breakpoint.
+- no special consideration is given to tables, columns, floats, grid or flexbox.
+  Breakpoints may occur between columns, inside table cells or between flex/grid items that are laid out on a horizontal axis.
 - only page breaks are considered
 - left, right, recto and verso breaks are no supported
 - [class 3 break points][7] are not considered
-- `box-decoration-break` is not supported. Elements are cloned when fragmented so all margins, borders and paddings are cloned
+- `box-decoration-break` is not supported. Elements are cloned when fragmented and all margins, borders and paddings are cloned
 - margins, borders and padding are not [collapsed to prevent overflow][8]
 - monolithic elements are not split to prevent overflow
 - if no valid break-point is found the content will overflow off the page
 - There is no support for automated hyphenation.  If you enable `hypens` they will not be added across page breaks.
-- if is probably buggy
+- CSS inserted content cannot be fragmented
+- it is probably buggy
 
 [1]: https://thecodingmachine.github.io/gotenberg/
 [2]: https://github.com/puppeteer/puppeteer 

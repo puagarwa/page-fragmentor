@@ -1,9 +1,7 @@
 import { saxGenerator } from './sax_generator';
 import { RectFilter } from './rect_filter';
 import { TextBreakPoint } from './break_points/text_break_point';
-import { LeadingBreakPoint } from './break_points/leading_break_point';
-import { TrailingBreakPoint } from './break_points/trailing_break_point';
-import { DisallowedBreakPoint } from './break_points/disallowed_break_point';
+import { SiblingBreakPoint } from './break_points/sibling_break_point';
 import { NodeRules } from './node_rules';
 
 /**
@@ -28,33 +26,31 @@ export function* breakPointGenerator(root) {
   const rootRect = root.getBoundingClientRect();
   const nodeRules = new NodeRules();
 
-  let currentBreakPoint;
+  let currentBreakPoint = new SiblingBreakPoint();
   let lastType;
 
   for (const [type, node] of saxIterator) {
     const rule = nodeRules.get(node);
 
-    if (lastType !== type) {
-      // When the type changes we have enough data to emit the breakpoint
-      if (currentBreakPoint) {
+    if (type === 'enter') {
+      if (lastType === 'text') {
         yield currentBreakPoint;
+        currentBreakPoint = new SiblingBreakPoint();
       }
-
-      if (type === 'text') {
+      currentBreakPoint.addLeading(node, rule);
+    } else if (type === 'text') {
+      if (lastType !== type) {
+        yield currentBreakPoint;
         currentBreakPoint = new TextBreakPoint();
-      } else if (type === 'enter') {
-        if (!currentBreakPoint) {
-          // The first leading break point is never allowed or you get infinite loops
-          currentBreakPoint = new DisallowedBreakPoint();
-        } else {
-          currentBreakPoint = new LeadingBreakPoint();
-        }
-      } else if (type === 'exit') {
-        currentBreakPoint = new TrailingBreakPoint();
       }
+      currentBreakPoint.addText(node, rule);
+    } else if (type === 'exit') {
+      if (lastType !== type) {
+        yield currentBreakPoint;
+        currentBreakPoint = new SiblingBreakPoint();
+      }
+      currentBreakPoint.addTrailing(node, rule);
     }
-
-    currentBreakPoint.add(node, rule);
 
     if (type === 'enter' || (type === 'text' && currentBreakPoint.texts.length === 1)) {
       const rect = rectFilter.get(node);
@@ -75,7 +71,5 @@ export function* breakPointGenerator(root) {
     lastType = type;
   }
 
-  if (currentBreakPoint) {
-    yield currentBreakPoint;
-  }
+  yield currentBreakPoint;
 }
