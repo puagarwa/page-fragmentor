@@ -6,11 +6,7 @@
  * Calculating though measuring ranges is slow and cannot cope
  * with different writing directions or unusual margins are paddings.
  */
-export function* lineBoxGenerator(texts) {
-  const textRange = new Range();
-  textRange.setStart(texts[0], 0);
-  textRange.setEnd(texts[texts.length - 1], texts[texts.length - 1].data.length);
-
+export function* lineBoxGenerator(textRange) {
   const selection = window.getSelection();
 
   selection.empty();

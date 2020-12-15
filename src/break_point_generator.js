@@ -68,7 +68,9 @@ export function* breakPointGenerator(root) {
 
     if (type === 'exit') {
       const rect = rectFilter.get(node);
-      if (rect.bottom > rootRect.bottom) {
+      const style = window.getComputedStyle(node);
+      const bottom = Math.ceil(rect.bottom + (parseFloat(style.marginBottom) || 0));
+      if (bottom > Math.floor(rootRect.bottom)) {
         currentBreakPoint.overflowing = true;
       }
     }

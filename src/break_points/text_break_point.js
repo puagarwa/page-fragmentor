@@ -1,6 +1,20 @@
 import { BaseBreakPoint } from './base_break_point';
 import { lineBoxGenerator } from '../line_box_generator';
 
+function calculateBottomSpace(range) {
+  let container = range.commonAncestorContainer;
+  if (container.nodeType === Node.TEXT_NODE) {
+    container = container.parentElement;
+  }
+
+  const style = window.getComputedStyle(container);
+  const size = (parseFloat(style.paddingBottom) || 0)
+    + (parseFloat(style.borderWidthBottom) || 0)
+    + (parseFloat(style.marginBottom) || 0);
+
+  return Math.ceil(Math.max(size, 0));
+}
+
 export class TextBreakPoint extends BaseBreakPoint {
   constructor() {
     super();
@@ -18,10 +32,6 @@ export class TextBreakPoint extends BaseBreakPoint {
     if (!disableRules.includes(4) && this.inheritedAvoid) {
       return null;
     }
-    const rootRect = root.getBoundingClientRect();
-    let lineBoxes = [];
-    let overflow = false;
-    let overflowIndex;
     let { widows, orphans } = this;
 
     // Values less than one must be ignored.
@@ -36,10 +46,22 @@ export class TextBreakPoint extends BaseBreakPoint {
       widows = 1;
       orphans = 1;
     }
-    for (const lineBox of lineBoxGenerator(this.texts)) {
+
+    const textRange = new Range();
+    textRange.setStart(this.firstText, 0);
+    textRange.setEnd(this.lastText, this.lastText.data.length);
+
+    const rootRect = root.getBoundingClientRect();
+    let lineBoxes = [];
+    let overflow = false;
+    let overflowIndex;
+
+    const bottomSpace = calculateBottomSpace(textRange);
+
+    for (const lineBox of lineBoxGenerator(textRange)) {
       if (!overflow) {
         const rect = lineBox.getBoundingClientRect();
-        if (rect.bottom > rootRect.bottom) {
+        if (rect.bottom > rootRect.bottom - bottomSpace) {
           overflow = lineBox;
           overflowIndex = lineBoxes.length;
         }
@@ -50,29 +72,32 @@ export class TextBreakPoint extends BaseBreakPoint {
       lineBoxes.push(lineBox);
     }
 
-    if (orphans) {
+    if (overflowIndex !== undefined) {
+      if (overflowIndex < orphans) {
+        // Insufficient orphans
+        return null;
+      }
+
       lineBoxes = lineBoxes.slice(orphans);
     }
 
-    if (widows > 1) {
-      lineBoxes = lineBoxes.slice(0, -widows + 1);
-    }
+    const breakOnLineBox = lineBoxes[lineBoxes.length - widows];
 
-    let lastLineBox;
-    for (const lineBox of lineBoxes) {
-      if (lineBox === overflow) {
-        break;
-      }
-      lastLineBox = lineBox;
-    }
-
-    if (!lastLineBox) {
+    if (!breakOnLineBox) {
       return null;
     }
 
     const range = new Range();
-    range.setStart(lastLineBox.startContainer, lastLineBox.startOffset);
+    range.setStart(breakOnLineBox.startContainer, breakOnLineBox.startOffset);
     range.setEndAfter(root.lastChild);
     return range;
+  }
+
+  get firstText() {
+    return this.texts[0];
+  }
+
+  get lastText() {
+    return this.texts[this.texts.length - 1];
   }
 }
