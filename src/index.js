@@ -6,4 +6,9 @@ window.addEventListener('load', async () => {
   await document.fonts.ready;
   // Fragment the pages
   createPages();
+
+  // Firefox won't scroll to top in the same tick
+  setTimeout(() => {
+    window.scrollTo(0, 0);
+  }, 0);
 });
