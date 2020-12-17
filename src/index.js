@@ -11,7 +11,7 @@ window.addEventListener('load', async () => {
   // Fragment the pages
   createPages();
 
-  document.body.removeAttribute('aria-busy');
+  document.body.setAttribute('aria-busy', 'false');
 
   // Firefox won't scroll to top in the same tick
   setTimeout(() => {

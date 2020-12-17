@@ -9,7 +9,7 @@ function calculateBottomSpace(range) {
 
   const style = window.getComputedStyle(container);
   const size = (parseFloat(style.paddingBottom) || 0)
-    + (parseFloat(style.borderWidthBottom) || 0)
+    + (parseFloat(style.borderBottomWidth) || 0)
     + (parseFloat(style.marginBottom) || 0);
 
   return Math.ceil(Math.max(size, 0));
