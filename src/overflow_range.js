@@ -7,7 +7,7 @@ export function overflowRange(root) {
   let overflowing = false;
   for (const breakPoint of breakPointIterator) {
     // Always use the first forced breakpoint
-    if (breakPoint.force) {
+    if (breakPoint.force && !breakPoint.overflowing) {
       const range = breakPoint.range(root);
       if (range) {
         return range;

@@ -1,9 +1,9 @@
 # TODO
 
 - Fix - No fragmentation between td
+- Fix - Machine stops page 6 margin error
 
 - Test pages
-  - avoid - make sure breaks are between siblings
   - margin bottom for sibling breaks
 
 - widows / orphans for an empty BR

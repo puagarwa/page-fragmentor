@@ -61,12 +61,12 @@ export class TextBreakPoint extends BaseBreakPoint {
     for (const lineBox of lineBoxGenerator(textRange)) {
       if (!overflow) {
         const rect = lineBox.getBoundingClientRect();
-        if (rect.bottom > rootRect.bottom - bottomSpace) {
+        if (rect.bottom > (rootRect.bottom - bottomSpace)) {
           overflow = lineBox;
           overflowIndex = lineBoxes.length;
         }
       }
-      if (overflow && lineBoxes.length > overflowIndex + widows) {
+      if (overflow && lineBoxes.length > overflowIndex + widows - 1) {
         break;
       }
       lineBoxes.push(lineBox);
