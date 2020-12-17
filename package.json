@@ -25,7 +25,5 @@
     "playwright": "^1.5.2",
     "sanitize-filename": "^1.6.3"
   },
-  "dependencies": {
-    "number-to-words": "^1.2.4"
-  }
+  "dependencies": {}
 }
