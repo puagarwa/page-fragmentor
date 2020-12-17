@@ -22,6 +22,20 @@ body {
   --page-count: 0;
 }
 
+body[aria-busy=true] * {
+  opacity: 0 !important;
+}
+
+body[aria-busy=true]:after {
+  content: "Generating…";
+  position: fixed;
+  top: calc(50vh - 2em);;
+  left: 0;
+  right: 0;
+  font-size: 2em;
+  text-align: center;
+}
+
 * {
   /* Force specified font size on iOS */
   -webkit-text-size-adjust: none;

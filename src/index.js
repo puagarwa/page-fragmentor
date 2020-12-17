@@ -1,11 +1,17 @@
 import { createPages } from './create_pages';
 
+window.addEventListener('DOMContentLoaded', async () => {
+  document.body.setAttribute('aria-busy', 'true');
+});
+
 // Wait for everything to load
 window.addEventListener('load', async () => {
   // Fonts aren't included in load 🤷
   await document.fonts.ready;
   // Fragment the pages
   createPages();
+
+  document.body.removeAttribute('aria-busy');
 
   // Firefox won't scroll to top in the same tick
   setTimeout(() => {
