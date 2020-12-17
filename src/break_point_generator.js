@@ -34,11 +34,17 @@ export function* breakPointGenerator(root) {
 
     if (type === 'enter') {
       if (lastType === 'text') {
+        const lastBreakPoint = currentBreakPoint;
         yield currentBreakPoint;
+
         currentBreakPoint = new SiblingBreakPoint();
+        currentBreakPoint.addTrailing(lastBreakPoint.lastText, {});
       }
       currentBreakPoint.addLeading(node, rule);
     } else if (type === 'text') {
+      if (lastType === 'exit') {
+        currentBreakPoint.addLeading(node, rule);
+      }
       if (lastType !== type) {
         yield currentBreakPoint;
         currentBreakPoint = new TextBreakPoint();

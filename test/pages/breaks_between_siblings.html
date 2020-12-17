@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <title>Breaks between siblings</title>
+  <link href="../../styles/paged.css" rel="stylesheet">
+  <script src="../../src/index.js"></script>
+  <style>
+    html {
+      --page-size: A5;
+    }
+
+    div {
+      break-before: page;
+      break-after: page;
+    }
+
+    .expected-break-after {
+      border-bottom: 1px solid red;
+    }
+  </style>
+<body>
+<main>
+  Each line of text should be on a separate page with no blank pages
+  <div>
+    <div>
+      <div>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      </div>
+    </div>
+    <div>
+      Nam cursus pulvinar magna, in viverra nisi.
+    </div>
+    Ut id elit eget enim elementum pellentesque.
+  </div>
+  <div>
+    <div>
+      Vestibulum mi neque, tristique at eleifend at, mollis interdum felis.
+    </div>
+  </div>
+  <div>
+    <div>
+      <div>
+        <div>
+          Vestibulum mi neque, tristique at eleifend at, mollis interdum felis.
+          <div>
+            Aenean sit amet elementum erat. Etiam malesuada quam a mi rutrum, a malesuada tellus ultricies.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
