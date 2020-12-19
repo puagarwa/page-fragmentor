@@ -1,5 +1,8 @@
 # TODO
 
+- ol extractor
+- no break in table cells, caption etc
+- events
 - Add jest tests
 - Build process
 - CSS file name

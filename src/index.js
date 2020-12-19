@@ -1,6 +1,6 @@
 import { getOverflowingRange } from './get_overflowing_range';
 import { parsePageSize } from './parse_page_size';
-import { extractWithClonedTHead } from './extract_with_cloned_thead';
+import { extract } from './extract';
 
 function newPage({ footer, header, pageNumber }) {
   const page = document.createElement('div');
@@ -117,7 +117,7 @@ export function createPages() {
       }
     }
 
-    content = range ? extractWithClonedTHead(range) : null;
+    content = range ? extract(range) : null;
   }
 
   document.body.style.setProperty('--page-count', pageCount);

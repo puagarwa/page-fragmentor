@@ -147,6 +147,21 @@ Supported properties:
 
 If the content is broken across a table any `<thead>` will be cloned.
 
+### Tables
+
+`<thead>` will be cloned if a table is fragmented.
+
+The CSS contains some base settings for tables.
+
+By default a `<tr>` has `break-inside: avoid`.  Without this breaks may happen within a table cell, which may
+lead to cells changing columns.
+
+### Lists and counters
+
+The `start` property is reset on ordered lists so the numbering is retained.
+
+If you use counters, be sure to check they still count across pages.
+
 ## Fragmentation algorithm
 
 The fragmentation algorithm is loosely based on the [CSS fragmentation module 3][6]
