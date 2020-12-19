@@ -37,7 +37,7 @@ export class SiblingBreakPoint extends BaseBreakPoint {
   }
 
   range(root, disableRules = []) {
-    if (!this.node || this.node.matches('td,th')) {
+    if (!this.node || (this.node === Node.ELEMENT_NODE && this.node.matches('td,th'))) {
       return null;
     }
     if (!disableRules.includes(2) && this.inheritedAvoid) {

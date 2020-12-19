@@ -1,5 +1,5 @@
 {
-  "name": "@citizensadvice/paged",
+  "name": "@citizensadvice/page-fragmenter",
   "version": "0.0.1",
   "description": "Split a HTML page into printable pages",
   "scripts": {

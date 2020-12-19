@@ -3,18 +3,16 @@ function* iterateLevel(walker, inline = false) {
     const { currentNode } = walker;
 
     if (currentNode.nodeType === Node.TEXT_NODE) {
-      yield ['text', currentNode];
+      yield ['inline', currentNode];
       continue;
     }
 
     // Inline can only be broken across text nodes
     const isInline = inline || window.getComputedStyle(currentNode).display.includes('inline');
 
-    if (!isInline) {
-      yield ['enter', currentNode];
-    }
+    yield [isInline ? 'inline' : 'enter', currentNode];
 
-    if (!currentNode.matches('picture,video,canvas,object,audio,embed,iframe') && walker.firstChild()) {
+    if (!currentNode.matches('picture,video,canvas,object,audio,embed,iframe,svg,math') && walker.firstChild()) {
       yield* iterateLevel(walker, isInline);
       walker.parentNode();
     }
@@ -38,7 +36,7 @@ const types = NodeFilter.SHOW_ELEMENT + NodeFilter.SHOW_TEXT;
  * @param [Integer] Types filter
  * @param [NodeFilter] Filter including nodes
  */
-export function* saxGenerator(root, nodeFilter) {
+export function* nodeGenerator(root, nodeFilter) {
   const walker = document.createTreeWalker(root, types, nodeFilter);
   if (!walker.nextNode()) {
     return;

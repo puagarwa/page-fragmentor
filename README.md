@@ -154,9 +154,11 @@ The fragmentation algorithm is loosely based on the [CSS fragmentation module 3]
 - breakpoints may occur between sibling nodes, or between text line-boxes
 - the document is processed in document order.
   A forced breakpoint is immediately used.
-  If an overflowing element is found the algorithm works backwards to find the first allowed breakpoint.
+  If an overflowing element is found the algorithm works backwards to find the first allowed breakpoint
 - no special consideration is given to tables, columns, floats, grid or flexbox.
-  Breakpoints may occur between columns, inside table cells or between flex/grid items that are laid out on a horizontal axis.
+  Breakpoints may occur between columns, inside table cells or between flex/grid items that are laid out on a horizontal axis
+- any CSS that changes the rendered order of elements from the logical DOM order - such a flex-order, grid, or floats -
+  is not considered and may result in unexpected breakpoints
 - only page breaks are considered
 - left, right, recto and verso breaks are no supported
 - [class 3 break points][7] are not considered

@@ -5,4 +5,8 @@ export class BaseBreakPoint {
     this.force = false;
     this.overflowing = false;
   }
+
+  range() {
+    return null;
+  }
 }

@@ -1,13 +1,13 @@
-import { breakPointGenerator } from './break_point_generator';
+import { breakPointGenerator } from './generators/break_point_generator';
 
-export function overflowRange(root) {
+export function getOverflowingRange(root) {
   const breakPointIterator = breakPointGenerator(root);
 
   const breakPoints = [];
   let overflowing = false;
   for (const breakPoint of breakPointIterator) {
     // Always use the first forced breakpoint
-    if (breakPoint.force && !breakPoint.overflowing) {
+    if (!overflowing && breakPoint.force && !breakPoint.overflowing) {
       const range = breakPoint.range(root);
       if (range) {
         return range;
