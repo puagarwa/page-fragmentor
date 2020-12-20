@@ -5,7 +5,9 @@ export class NodeRules extends Map {
     }
     if (!(node instanceof Element)) {
       return {
-        inheritedAvoid: false,
+        breakInsideAvoid: false,
+        breakAfter: 'auto',
+        breakBefore: 'auto',
         orphans: 2,
         widows: 2,
       };
@@ -22,7 +24,7 @@ export class NodeRules extends Map {
     const parentRule = this.get(node.parentNode);
     const styles = window.getComputedStyle(node);
     return {
-      inheritedAvoid: ['avoid', 'avoid-page'].includes(styles.getPropertyValue('break-inside')) || parentRule.inheritedAvoid,
+      breakInsideAvoid: ['avoid', 'avoid-page'].includes(styles.getPropertyValue('break-inside')) || parentRule.breakInsideAvoid,
       breakAfter: styles.getPropertyValue('break-after'),
       breakBefore: styles.getPropertyValue('break-before'),
       orphans: parseInt(styles.getPropertyValue('--orphans') || styles.getPropertyValue('orphans') || 2, 10),

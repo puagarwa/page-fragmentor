@@ -151,16 +151,21 @@ If the content is broken across a table any `<thead>` will be cloned.
 
 `<thead>` will be cloned if a table is fragmented.
 
+The table layout will also change to `fixed` after being fragmented.  This prevents the column widths
+changing which can result in unexpected overflow.
+
 The CSS contains some base settings for tables.
 
 By default a `<tr>` has `break-inside: avoid`.  Without this breaks may happen within a table cell, which may
 lead to cells changing columns.
 
+Oversized table cells, theads or captions may lead to unpredictable results.
+
 ### Lists and counters
 
-The `start` property is reset on ordered lists so the numbering is retained.
+If an `<ol>` is fragmented the `start` property is set on the new fragment to preserve numbering.
 
-If you use counters, be sure to check they still count across pages.
+If you use counters, be sure to check they still count across pages as expected.
 
 ## Fragmentation algorithm
 

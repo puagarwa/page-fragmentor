@@ -1,13 +1,14 @@
 # TODO
 
-- ol extractor
-- no break in table cells, caption etc
+- Fix
+  - incorrect break inside
+  - more focused tests for break-inside, and break before and after
+  - inline should honour node break inside avoid
 - events
+- Move caches into folder
 - Add jest tests
 - Build process
-- CSS file name
 - Check readme
-- Library name
 
 - Comment on
   - https://github.com/w3c/selection-api/issues/37

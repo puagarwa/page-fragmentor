@@ -6,11 +6,10 @@ export class SiblingBreakPoint extends BaseBreakPoint {
     this.lastTrailingNode = null;
   }
 
-  addLeading(node, { inheritedAvoid, breakBefore }) {
-    this.node ??= this.lastTrailingNode;
-
-    if (inheritedAvoid) {
-      this.inheritedAvoid = true;
+  addLeading(node, { breakBefore, breakInsideAvoid }) {
+    if (!this.node) {
+      this.node = this.lastTrailingNode;
+      this.inheritedAvoid = breakInsideAvoid;
     }
 
     if (['avoid', 'avoid-page'].includes(breakBefore)) {
@@ -21,12 +20,8 @@ export class SiblingBreakPoint extends BaseBreakPoint {
     }
   }
 
-  addTrailing(node, { inheritedAvoid, breakAfter }) {
+  addTrailing(node, { breakAfter }) {
     this.lastTrailingNode = node;
-
-    if (inheritedAvoid) {
-      this.inheritedAvoid = true;
-    }
 
     if (['avoid', 'avoid-page'].includes(breakAfter)) {
       this.avoid = true;

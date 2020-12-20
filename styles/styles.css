@@ -91,6 +91,20 @@ body[aria-busy=true]:after {
   table-layout: fixed !important;
 }
 
+caption {
+  break-after: avoid;
+  break-inside: avoid;
+}
+
+thead {
+  break-inside: avoid;
+  break-after: avoid;
+}
+
+tr {
+  break-inside: avoid;
+}
+
 @page {
   /* Default size */
   size: var(--page-size);

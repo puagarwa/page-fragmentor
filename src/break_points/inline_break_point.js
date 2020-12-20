@@ -22,15 +22,15 @@ export class InlineBreakPoint extends BaseBreakPoint {
     this.firstOverflowingNode = null;
   }
 
-  addNode(node, { inheritedAvoid, orphans, widows }) {
+  addNode(node, { breakInsideAvoid, orphans, widows }) {
     this.nodes.push(node);
-    this.inheritedAvoid ??= inheritedAvoid;
+    this.breakInsideAvoid ??= breakInsideAvoid;
     this.orphans ??= orphans;
     this.widows ??= widows;
   }
 
   range(root, disableRules = []) {
-    if (!disableRules.includes(4) && this.inheritedAvoid) {
+    if (!disableRules.includes(4) && this.breakInsideAvoid) {
       return null;
     }
 
