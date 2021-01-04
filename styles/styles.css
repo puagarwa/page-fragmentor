@@ -22,6 +22,7 @@ body {
   --page-count: 0;
 }
 
+/* Display friendly generating message */
 body[aria-busy=true] * {
   opacity: 0 !important;
 }
@@ -81,10 +82,12 @@ body[aria-busy=true]:after {
 /* The JS will set `--page-count` on the body and `--page-number` on the pages */
 /* https://chenhuijing.com/blog/the-wondrous-world-of-css-counters */
 .page-count::after {
-  /* You must set the counters. Safari does not support counter-set */
+  /* You must reset the counters. Safari does not support counter-set */
   counter-reset: pagecount var(--page-count) pagenumber var(--page-number);
   content: counter(pagenumber) " of " counter(pagecount);
 }
+
+/* Sensible defaults for tables */
 
 caption {
   break-after: avoid;
@@ -125,7 +128,7 @@ tr {
   }
 
   /* This sets each `.page` to be entirely contained on one printed page and to not overflow */
-  /* As long as the dimensions match the printer everything should come out the expected size */
+  /* As long as the dimensions match the printer settings everything should come out the expected size */
   .page {
     /* Remove on screen presentation */
     box-shadow: none;

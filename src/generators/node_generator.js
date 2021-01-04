@@ -29,12 +29,6 @@ const types = NodeFilter.SHOW_ELEMENT + NodeFilter.SHOW_TEXT;
  * SAX parser style DOM iterator
  *
  * Yields ['enter', node], ['text', node] and ['exit', node] values for a DOM structure
- *
- * See TreeWalker documentation on MDN
- *
- * @param [Element] The root element
- * @param [Integer] Types filter
- * @param [NodeFilter] Filter including nodes
  */
 export function* nodeGenerator(root, nodeFilter) {
   const walker = document.createTreeWalker(root, types, nodeFilter);

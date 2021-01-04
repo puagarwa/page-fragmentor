@@ -112,7 +112,7 @@ If you want to vary the headers and footers on each page, use CSS to show and hi
 `.page::not(nth-child(even)) .page-header .even-content { display: none}` will hide content on even pages.
 
 The selector `.page[data-last-page="true"]` will select content on the last page.
-This may result in an additional empty page with only headers and footers.
+This may result in an additional empty page with only headers or footers if this causes overflow.
 
 ### Page numbers
 
@@ -135,7 +135,7 @@ Page break settings are read from computed CSS values using `window.getComputedS
 **Do not**:
 
 - place these inside `@page` as these cannot be read by by `window.getComputedStyle`.
-- set breaks rules using `!important` as this is used in `@page` to prevent addition
+- set breaks rules using `!important` as this may result in unexpected additional breaks when printing.
 
 Supported properties:
 
@@ -145,11 +145,9 @@ Supported properties:
 - `widows`: Firefox does not support widows, use `--widows` instead. Default is 2. The value must be >= 1
 - `orphans`: Firefox does not support orphans, use `--orphans` instead. Default is 2. The value must be >= 1
 
-If the content is broken across a table any `<thead>` will be cloned.
-
 ### Tables
 
-`<thead>` will be cloned if a table is fragmented.
+`<thead>` will be cloned if a page is broken across a table.
 
 `<col>` elements will also be added to fix the width of the table.  This prevents overflow if fragmentation
 causes the browser to resize the table cells.
@@ -197,10 +195,10 @@ The fragmentation algorithm is loosely based on the [CSS fragmentation module 3]
 - `box-decoration-break` is not supported. Elements are cloned when fragmented and all margins, borders and paddings are cloned
 - margins, borders and padding are not [collapsed to prevent overflow][8]
 - monolithic elements are not split to prevent overflow
-- if no valid break-point is found the content will overflow off the page
-- There is no support for automated hyphenation.  If you enable `hypens` they will not be added across page breaks.
+- if no valid break-point is found the content will overflow off the page.  By default this content is hidden
+- There is no support for automated hyphenation.  If you enable `hypens` they will not be added across page breaks
 - CSS inserted content cannot be fragmented
-- it is probably buggy
+- it will have bugs.
 
 [1]: https://thecodingmachine.github.io/gotenberg/
 [2]: https://github.com/puppeteer/puppeteer 

@@ -111,8 +111,9 @@ export function createPages() {
         break;
       }
 
+      // Adding lastPage has created additional overflow
+      // Need to force an extra page for headers and footers
       if (!emptyRange(range)) {
-        // Need to force an extra page
         delete outerPage.dataset.lastPage;
         forceExtraPage = true;
         range = getOverflowingRange(page);

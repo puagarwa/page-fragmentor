@@ -1,5 +1,8 @@
 import { breakPointGenerator } from './generators/break_point_generator';
 
+/**
+ * Returns the range overflowing an element
+ */
 export function getOverflowingRange(root) {
   const breakPointIterator = breakPointGenerator(root);
 
@@ -33,7 +36,7 @@ export function getOverflowingRange(root) {
     if (!overflowing) {
       breakPoints.unshift(breakPoint);
     } else {
-      // No break point found.  We are overflowing
+      // No valid break point found.  We are overflowing
       // Use the next break point with any result
       const range = breakPoint.range([1, 2, 3, 4]);
       if (range) {
