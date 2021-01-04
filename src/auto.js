@@ -13,8 +13,8 @@ window.addEventListener('load', async () => {
 
   document.body.setAttribute('aria-busy', 'false');
 
-  // Firefox won't scroll to top in the same tick
-  setTimeout(() => {
-    window.scrollTo(0, 0);
-  }, 0);
+  // Line boxes are found using the selection api
+  // Clear any selection and return to top
+  window.getSelection().empty();
+  window.scrollTo(0, 0);
 });

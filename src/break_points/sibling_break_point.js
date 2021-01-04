@@ -1,50 +1,59 @@
 import { BaseBreakPoint } from './base_break_point';
 
 export class SiblingBreakPoint extends BaseBreakPoint {
-  constructor() {
-    super();
-    this.lastTrailingNode = null;
+  constructor(...args) {
+    super(...args);
+    this.leadingNodes = [];
+    this.trailingNodes = [];
   }
 
-  addLeading(node, { breakBefore, breakInsideAvoid }) {
-    if (!this.node) {
-      this.node = this.lastTrailingNode;
-      this.inheritedAvoid = breakInsideAvoid;
-    }
-
-    if (['avoid', 'avoid-page'].includes(breakBefore)) {
-      this.avoid = true;
-    }
-    if (breakBefore === 'page') {
-      this.force = true;
-    }
+  get force() {
+    return (this._force ??= this.leadingNodes.some((node) => this.nodeRules.get(node).breakBefore === 'page')
+      || this.trailingNodes.some((node) => this.nodeRules.get(node).breakAfter === 'page'));
   }
 
-  addTrailing(node, { breakAfter }) {
-    this.lastTrailingNode = node;
-
-    if (['avoid', 'avoid-page'].includes(breakAfter)) {
-      this.avoid = true;
-    }
-    if (breakAfter === 'page') {
-      this.force = true;
-    }
+  get overflowing() {
+    return this.leadingNodes.some(this.hasLeadingOverflow, this)
+      || this.trailingNodes.some(this.hasTrailingOverflow, this);
   }
 
-  range(root, disableRules = []) {
-    if (!this.node || (this.node === Node.ELEMENT_NODE && this.node.matches('td,th'))) {
+  range(disableBreakRules = []) {
+    const { node } = this;
+
+    if (!node || (node === Node.ELEMENT_NODE && node.matches('td,th'))) {
       return null;
     }
-    if (!disableRules.includes(2) && this.inheritedAvoid) {
+    if (!this.force && !disableBreakRules.includes(2) && this.nodeRules.get(node).inheritedAvoid) {
       return null;
     }
-    if (!disableRules.includes(1) && this.avoid) {
+    if (!this.force && !disableBreakRules.includes(1) && this.avoid) {
       return null;
     }
 
     const range = new Range();
-    range.setStartAfter(this.node);
-    range.setEndAfter(root.lastChild);
+    range.setStartAfter(node);
+    range.setEndAfter(this.root.lastChild);
     return range;
+  }
+
+  get avoid() {
+    return this.leadingNodes.some((node) => ['avoid', 'avoid-page'].includes(this.nodeRules.get(node).breakBefore))
+      || this.trailingNodes.some((node) => ['avoid', 'avoid-page'].includes(this.nodeRules.get(node).breakAfter));
+  }
+
+  get node() {
+    return this.trailingNodes[this.trailingNodes.length - 1];
+  }
+
+  hasLeadingOverflow(node) {
+    const rect = this.rectFilter.get(node);
+    return rect.top > this.rootRect.bottom;
+  }
+
+  hasTrailingOverflow(node) {
+    const rect = this.rectFilter.get(node);
+    const style = node.nodeType === Node.ELEMENT_NODE ? window.getComputedStyle(node) : {};
+    const bottom = Math.ceil(rect.bottom + (parseFloat(style.marginBottom) || 0));
+    return bottom > Math.floor(this.rootRect.bottom);
   }
 }

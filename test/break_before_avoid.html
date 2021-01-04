@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <title>Break before avoid</title>
+  <link href="../styles/styles.css" rel="stylesheet">
+  <script src="../src/auto.js"></script>
+  <style>
+    html {
+      --page-margin: 2em;
+      --page-size: 30em;
+    }
+
+    .avoid-before {
+      break-before: avoid;
+    }
+
+    p {
+      border: 1px solid red;
+    }
+
+    .page-content {
+      box-shadow:  inset 0 0 0 1px green;
+    }
+  </style>
+<body>
+<main>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Nam cursus pulvinar magna, in viverra nisi.
+    Ut id elit eget enim elementum pellentesque.
+    Vestibulum mi neque, tristique at eleifend at, mollis interdum felis.
+    Aenean sit amet elementum erat. Etiam malesuada quam a mi rutrum, a malesuada tellus ultricies.
+    Donec placerat dolor et porta tempor. Vestibulum quis lacus nec purus gravida placerat eu ac urna.
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Nam cursus pulvinar magna, in viverra nisi.
+    Ut id elit eget enim elementum pellentesque.
+    Vestibulum mi neque, tristique at eleifend at, mollis interdum felis.
+    Donec placerat dolor et porta tempor. Vestibulum quis lacus nec purus gravida placerat eu ac urna.
+    Ut id elit eget enim elementum pellentesque.
+  </p>
+  <p class="avoid-before">
+    <strong>Break should be forced within the box above</strong>
+    <br>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Nam cursus pulvinar magna, in viverra nisi.
+    Ut id elit eget enim elementum pellentesque.
+    Vestibulum mi neque, tristique at eleifend at, mollis interdum felis.
+    Aenean sit amet elementum erat. Etiam malesuada quam a mi rutrum, a malesuada tellus ultricies.
+    Donec placerat dolor et porta tempor. Vestibulum quis lacus nec purus gravida placerat eu ac urna.
+  </p>
+</main>

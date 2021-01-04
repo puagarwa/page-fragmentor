@@ -1,9 +1,9 @@
 import { nodeGenerator } from './node_generator';
-import { RectFilter } from '../rect_filter';
+import { RectFilter } from '../caches/rect_filter_cache';
 import { BaseBreakPoint } from '../break_points/base_break_point';
 import { InlineBreakPoint } from '../break_points/inline_break_point';
 import { SiblingBreakPoint } from '../break_points/sibling_break_point';
-import { NodeRules } from '../node_rules';
+import { NodeRules } from '../caches/node_rule_cache';
 
 /**
  * Yields permissible break points
@@ -24,82 +24,43 @@ import { NodeRules } from '../node_rules';
 export function* breakPointGenerator(root) {
   const rectFilter = new RectFilter();
   const saxIterator = nodeGenerator(root, rectFilter);
-  const rootRect = root.getBoundingClientRect();
   const nodeRules = new NodeRules();
 
-  let currentBreakPoint = new SiblingBreakPoint();
+  let currentBreakPoint = new SiblingBreakPoint({ root, nodeRules, rectFilter });
   let lastType;
-  let firstUseableNode;
 
   for (const [type, node] of saxIterator) {
-    const rule = nodeRules.get(node);
-    firstUseableNode ??= node;
-
     switch (type) {
       case 'enter': {
         if (lastType === 'inline') {
           const lastBreakPoint = currentBreakPoint;
           yield currentBreakPoint;
 
-          currentBreakPoint = new SiblingBreakPoint();
-          currentBreakPoint.addTrailing(lastBreakPoint.lastNode, {});
+          currentBreakPoint = new SiblingBreakPoint({ root, nodeRules, rectFilter });
+          currentBreakPoint.trailingNodes.push(lastBreakPoint.lastNode);
         }
-        currentBreakPoint.addLeading(node, rule);
-
-        const rect = rectFilter.get(node);
-        if (rect.top > rootRect.bottom) {
-          currentBreakPoint.overflowing = true;
-        }
-
+        currentBreakPoint.leadingNodes.push(node);
         break;
       }
 
       case 'inline': {
         if (lastType === 'exit') {
-          currentBreakPoint.addLeading(node, rule);
+          currentBreakPoint.leadingNodes.push(node);
         }
         if (lastType !== type) {
           yield currentBreakPoint;
-          currentBreakPoint = new InlineBreakPoint();
+          currentBreakPoint = new InlineBreakPoint({ root, nodeRules, rectFilter });
         }
-        currentBreakPoint.addNode(node, rule);
-
-        if (currentBreakPoint.nodes.length === 1) {
-          const rect = rectFilter.get(node);
-          if (rect.top > rootRect.bottom) {
-            currentBreakPoint.overflowing = true;
-          }
-        }
-
-        if (node !== firstUseableNode
-          && !currentBreakPoint.firstOverflowingNode
-          && node.nodeType === Node.ELEMENT_NODE
-        ) {
-          const rect = rectFilter.get(node);
-          const style = window.getComputedStyle(node);
-          const bottom = Math.ceil(rect.bottom + (parseFloat(style.marginBottom) || 0));
-          if (bottom > Math.floor(rootRect.bottom)) {
-            currentBreakPoint.firstOverflowingNode = node;
-          }
-        }
-
+        currentBreakPoint.nodes.push(node);
         break;
       }
 
       case 'exit': {
         if (lastType !== type) {
           yield currentBreakPoint;
-          currentBreakPoint = new SiblingBreakPoint();
+          currentBreakPoint = new SiblingBreakPoint({ root, nodeRules, rectFilter });
         }
-        currentBreakPoint.addTrailing(node, rule);
-
-        const rect = rectFilter.get(node);
-        const style = window.getComputedStyle(node);
-        const bottom = Math.ceil(rect.bottom + (parseFloat(style.marginBottom) || 0));
-        if (bottom > Math.floor(rootRect.bottom)) {
-          currentBreakPoint.overflowing = true;
-        }
-
+        currentBreakPoint.trailingNodes.push(node);
         break;
       }
 
@@ -113,7 +74,6 @@ export function* breakPointGenerator(root) {
   yield currentBreakPoint;
 
   // If the last node is a next node and we are overflowing we may need to force a breakpoint
-  currentBreakPoint = new BaseBreakPoint();
-  currentBreakPoint.overflowing = root.scrollHeight > root.clientHeight;
+  currentBreakPoint = new BaseBreakPoint({ root, nodeRules, rectFilter });
   yield currentBreakPoint;
 }

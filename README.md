@@ -41,7 +41,7 @@ Avoid modifying `.page` or `.page-inner` without reading the notes in the CSS as
 `data-last-page="true"` is added to the final page.  If adding this caused overflow, an additional page will be added.
 
 ```html
-<body data-page-count="3" style="--var-page-count:3;">
+<body data-page-count="3" style="--var-page-count:3;" data-page-count="3">
   <div class="page" data-page-number="1" style="--var-page-number:1;">
     <div class="page-inner">
       <div class="page-header"></div> <!-- Optional -->
@@ -151,8 +151,8 @@ If the content is broken across a table any `<thead>` will be cloned.
 
 `<thead>` will be cloned if a table is fragmented.
 
-The table layout will also change to `fixed` after being fragmented.  This prevents the column widths
-changing which can result in unexpected overflow.
+`<col>` elements will also be added to fix the width of the table.  This prevents overflow if fragmentation
+causes the browser to resize the table cells.
 
 The CSS contains some base settings for tables.
 
@@ -166,6 +166,18 @@ Oversized table cells, theads or captions may lead to unpredictable results.
 If an `<ol>` is fragmented the `start` property is set on the new fragment to preserve numbering.
 
 If you use counters, be sure to check they still count across pages as expected.
+
+### Events
+
+Some events are provided if you wish to customise the fragmentation.  These events bubble.
+
+- `create-page` - dispatched when a page is created, but before any fragmentation occurs
+- `before-fragmentation` - dispatched before fragmentation.
+   The `details` property contains the `Range` that will be moved into a new page
+- `after-fragmentation` - dispatched after the range is extracted.
+   The `details` property contains the extracted `DocumentFragment` that will be inserted into the next page
+- `fragmentation-finished` - dispatched after the fragmentation process is completed.
+   Dispatched on `document.body`.
 
 ## Fragmentation algorithm
 

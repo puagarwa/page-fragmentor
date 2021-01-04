@@ -1,6 +1,7 @@
 module.exports = {
   serverOptions: {
-    command: 'npm start',
+    command: 'npm start -- --no-cache',
     port: 1234,
+    launchTimeout: 50000,
   },
 };

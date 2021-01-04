@@ -86,11 +86,6 @@ body[aria-busy=true]:after {
   content: counter(pagenumber) " of " counter(pagecount);
 }
 
-/* Stops tables adjusting their layout after being split as this can cause overflow */
-.fix-table-layout {
-  table-layout: fixed !important;
-}
-
 caption {
   break-after: avoid;
   break-inside: avoid;

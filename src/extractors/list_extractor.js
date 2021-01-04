@@ -16,7 +16,7 @@ function findAndMarkLists(range) {
   }
   cursor = cursor.closest('ol');
   while (cursor) {
-    cursor.dataset.uuid = uuid();
+    cursor.dataset.fragmentationUuid = uuid();
     lists.push(cursor);
     if (cursor.reversed) {
       const items = [...cursor.childNodes].filter(visibleListItem).length;
@@ -35,13 +35,14 @@ export class ListExtractor {
   after(fragment) {
     this.lists.forEach((list) => {
       const items = [...list.childNodes].filter(visibleListItem).length;
-      const newList = fragment.querySelector(`ol[data-uuid="${list.dataset.uuid}"]`);
+      const newList = fragment.querySelector(`ol[data-fragmentation-uuid="${list.dataset.fragmentationUuid}"]`);
       if (newList) {
         if (newList.reversed) {
           newList.start = list.start - items;
         } else {
           newList.start = list.start + items;
         }
+        delete newList.dataset.fragmentationUuid;
       }
     });
   }

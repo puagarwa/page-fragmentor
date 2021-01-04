@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <title>Oversized last headers and footers</title>
+  <link href="../styles/styles.css" rel="stylesheet">
+  <script src="../src/auto.js"></script>
+  <style>
+    html {
+      --page-size: A5;
+    }
+
+    .page-footer,
+    .page-header {
+      display: none;
+    }
+
+    .page[data-last-page="true"] .page-header,
+    .page[data-last-page="true"] .page-footer {
+      display: block;
+    }
+
+    .page-header {
+      box-shadow:  inset 0 0 0 1px red;
+    }
+
+    .page-footer {
+      box-shadow:  inset 0 0 0 1px blue;
+    }
+
+    .page-content {
+      box-shadow:  inset 0 0 0 1px green;
+    }
+  </style>
+<body>
+<header>
+  <p>
+    <strong>Header</strong>
+    <br>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Nam cursus pulvinar magna, in viverra nisi.
+    Ut id elit eget enim elementum pellentesque.
+    Vestibulum mi neque, tristique at eleifend at, mollis interdum felis.
+    Aenean sit amet elementum erat. Etiam malesuada quam a mi rutrum, a malesuada tellus ultricies.
+  </p>
+</header>
+<main>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Nam cursus pulvinar magna, in viverra nisi.
+    Ut id elit eget enim elementum pellentesque.
+    Vestibulum mi neque, tristique at eleifend at, mollis interdum felis.
+    Aenean sit amet elementum erat. Etiam malesuada quam a mi rutrum, a malesuada tellus ultricies.
+    Donec placerat dolor et porta tempor. Vestibulum quis lacus nec purus gravida placerat eu ac urna.
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Nam cursus pulvinar magna, in viverra nisi.
+    Ut id elit eget enim elementum pellentesque.
+  </p>
+</main>
+<footer>
+  <p>
+    <strong>Footer</strong>
+    <br>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+    Nam cursus pulvinar magna, in viverra nisi.
+    Ut id elit eget enim elementum pellentesque.
+    Vestibulum mi neque, tristique at eleifend at, mollis interdum felis.
+    Aenean sit amet elementum erat. Etiam malesuada quam a mi rutrum, a malesuada tellus ultricies.
+  </p>
+</footer>

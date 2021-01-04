@@ -8,7 +8,7 @@ export function getOverflowingRange(root) {
   for (const breakPoint of breakPointIterator) {
     // Always use the first forced breakpoint
     if (!overflowing && breakPoint.force && !breakPoint.overflowing) {
-      const range = breakPoint.range(root);
+      const range = breakPoint.range();
       if (range) {
         return range;
       }
@@ -22,7 +22,7 @@ export function getOverflowingRange(root) {
       // https://www.w3.org/TR/css-break-3/#unforced-breaks
       for (const disableRules of [[], [3], [1, 3], [1, 2, 3], [1, 2, 3, 4]]) {
         for (const previousBreakPoint of breakPoints) {
-          const range = previousBreakPoint.range(root, disableRules);
+          const range = previousBreakPoint.range(disableRules);
           if (range) {
             return range;
           }
@@ -35,7 +35,7 @@ export function getOverflowingRange(root) {
     } else {
       // No break point found.  We are overflowing
       // Use the next break point with any result
-      const range = breakPoint.range(root, [1, 2, 3, 4]);
+      const range = breakPoint.range([1, 2, 3, 4]);
       if (range) {
         return range;
       }

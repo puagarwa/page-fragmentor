@@ -1,12 +1,7 @@
 import { BaseBreakPoint } from './base_break_point';
 import { lineBoxGenerator } from '../generators/line_box_generator';
 
-function calculateBottomSpace(range) {
-  let container = range.commonAncestorContainer;
-  if (container.nodeType === Node.TEXT_NODE) {
-    container = container.parentElement;
-  }
-
+function calculateBottomSpace(container) {
   const style = window.getComputedStyle(container);
   const size = (parseFloat(style.paddingBottom) || 0)
     + (parseFloat(style.borderBottomWidth) || 0)
@@ -16,25 +11,22 @@ function calculateBottomSpace(range) {
 }
 
 export class InlineBreakPoint extends BaseBreakPoint {
-  constructor() {
-    super();
+  constructor(...args) {
+    super(...args);
     this.nodes = [];
-    this.firstOverflowingNode = null;
   }
 
-  addNode(node, { breakInsideAvoid, orphans, widows }) {
-    this.nodes.push(node);
-    this.breakInsideAvoid ??= breakInsideAvoid;
-    this.orphans ??= orphans;
-    this.widows ??= widows;
+  get overflowing() {
+    const rect = this.rectFilter.get(this.firstNode);
+    return rect.top > this.rootRect.bottom;
   }
 
-  range(root, disableRules = []) {
-    if (!disableRules.includes(4) && this.breakInsideAvoid) {
+  range(disableBreakRules = []) {
+    if (!disableBreakRules.includes(4) && this.containerRules.breakInsideAvoid) {
       return null;
     }
 
-    const lineBoxRange = this.findLineBoxRange(root, disableRules.includes(3));
+    const lineBoxRange = this.findLineBoxRange(disableBreakRules.includes(3));
     const overflowingNodeRange = this.findFirstOverflowingNodeRange();
 
     let overflowing = lineBoxRange || overflowingNodeRange;
@@ -53,37 +45,29 @@ export class InlineBreakPoint extends BaseBreakPoint {
 
     const range = new Range();
     range.setStart(overflowing.startContainer, overflowing.startOffset);
-    range.setEndAfter(root.lastChild);
+    range.setEndAfter(this.root.lastChild);
     return range;
   }
 
-  findLineBoxRange(root, relaxWidowsAndOrphans) {
-    let { widows, orphans } = this;
+  findLineBoxRange(relaxWidowsAndOrphans) {
+    let { widows, orphans } = this.containerRules;
+
+    widows = widows || 2;
+    orphans = orphans || 2;
 
     if (relaxWidowsAndOrphans) {
       widows = 1;
       orphans = 1;
     }
 
-    if (!this.firstText) {
-      return null;
-    }
-
-    const textRange = new Range();
-    textRange.setStart(this.firstText, 0);
-    textRange.setEnd(this.lastText, this.lastText.data.length);
-
-    const rootRect = root.getBoundingClientRect();
     let lineBoxes = [];
     let overflow = false;
     let overflowIndex;
 
-    const bottomSpace = calculateBottomSpace(textRange);
-
-    for (const lineBox of lineBoxGenerator(textRange)) {
+    for (const lineBox of lineBoxGenerator(this.nodes)) {
       if (!overflow) {
         const rect = lineBox.getBoundingClientRect();
-        if (rect.bottom > (rootRect.bottom - bottomSpace)) {
+        if (rect.bottom > (this.rootRect.bottom - this.bottomSpace)) {
           overflow = lineBox;
           overflowIndex = lineBoxes.length;
         }
@@ -107,49 +91,47 @@ export class InlineBreakPoint extends BaseBreakPoint {
   }
 
   findFirstOverflowingNodeRange() {
-    if (!this.firstOverflowingNode) {
+    const foundNode = this.nodes.find((node) => {
+      const rect = this.rectFilter.get(node);
+      return rect.bottom > (this.rootRect.bottom - this.bottomSpace);
+    });
+
+    if (!foundNode || foundNode.nodeType === Node.TEXT_NODE || foundNode === this.firstNode) {
       return null;
     }
     const range = new Range();
-    range.setStartBefore(this.firstOverflowingNode);
+    range.setStartBefore(foundNode);
     return range;
   }
 
-  set widows(value) {
-    if (value < 1) {
-      return;
+  get container() {
+    if (this._container) {
+      return this._container;
     }
-    this._widows = value;
-  }
-
-  get widows() {
-    return this._widows || 2;
-  }
-
-  set orphans(value) {
-    if (value < 1) {
-      return;
+    const range = new Range();
+    range.setStartBefore(this.firstNode);
+    range.setEndAfter(this.lastNode);
+    let container = range.commonAncestorContainer;
+    if (container.nodeType === Node.TEXT_NODE) {
+      container = container.parentNode;
     }
-    this._orphans = value;
+    this._container = container;
+    return container;
   }
 
-  get orphans() {
-    return this._orphans || 2;
+  get bottomSpace() {
+    return (this._bottomSpace ??= calculateBottomSpace(this.container));
+  }
+
+  get containerRules() {
+    return (this._containerRules ??= this.nodeRules.get(this.container));
   }
 
   get firstNode() {
     return this.nodes[0];
   }
 
-  get firstText() {
-    return this.nodes.find((node) => node.nodeType === Node.TEXT_NODE);
-  }
-
   get lastNode() {
     return this.nodes[this.nodes.length - 1];
-  }
-
-  get lastText() {
-    return [...this.nodes].reverse().find((node) => node.nodeType === Node.TEXT_NODE);
   }
 }
