@@ -1,14 +1,25 @@
 {
   "name": "@citizensadvice/page-fragmenter",
-  "version": "0.0.1",
+  "version": "1.0.0-rc1",
   "description": "Split a HTML page into printable pages",
   "scripts": {
     "test": "jest",
     "lint": "eslint . --ext .js",
-    "start": "parcel test/index.html --no-cache"
+    "start": "parcel test/index.html --dist-dir local",
+    "prebuild": "rm -rf dist",
+    "build": "npm run build:main && npm run build:auto",
+    "build:main": "parcel build src/index.js",
+    "build:auto": "parcel build src/auto.js",
+    "version": "npm run lint",
+    "release": "np"
   },
-  "author": "",
+  "author": "Daniel Lewis",
   "license": "ISC",
+  "files": [
+    "dist/**/*",
+    "styles/**/*",
+    "src/**/*"
+  ],
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
@@ -21,8 +32,8 @@
     "eslint-plugin-jest-playwright": "^0.2.1",
     "jest": "^26.6.3",
     "jest-playwright-preset": "^1.4.0",
+    "np": "^7.2.0",
     "parcel": "^2.0.0-nightly.479",
     "playwright": "^1.7.1"
-  },
-  "dependencies": {}
+  }
 }

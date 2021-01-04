@@ -200,6 +200,22 @@ The fragmentation algorithm is loosely based on the [CSS fragmentation module 3]
 - CSS inserted content cannot be fragmented
 - it will have bugs.
 
+## Development
+
+```bash
+npm install
+
+# Start
+npm start
+# Visit http://localhost:1234
+
+# Test
+npm test
+
+# Build
+npm build
+```
+
 [1]: https://thecodingmachine.github.io/gotenberg/
 [2]: https://github.com/puppeteer/puppeteer 
 [3]: https://github.com/microsoft/playwright
