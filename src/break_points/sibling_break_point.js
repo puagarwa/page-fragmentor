@@ -18,15 +18,15 @@ export class SiblingBreakPoint extends BaseBreakPoint {
   }
 
   range(disableBreakRules = []) {
-    const { node } = this;
+    const { node, force, avoid } = this;
 
     if (!node || (node === Node.ELEMENT_NODE && node.matches('td,th'))) {
       return null;
     }
-    if (!this.force && !disableBreakRules.includes(2) && this.nodeRules.get(node).inheritedAvoid) {
+    if (!force && !disableBreakRules.includes(2) && this.nodeRules.get(node).breakInsideAvoid) {
       return null;
     }
-    if (!this.force && !disableBreakRules.includes(1) && this.avoid) {
+    if (!force && !disableBreakRules.includes(1) && avoid) {
       return null;
     }
 
