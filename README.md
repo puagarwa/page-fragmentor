@@ -23,7 +23,7 @@ The page will be fragmented into printable pages.
 Configuration is done via CSS.  You can either following the guidance below, or read the [CSS](styles/styles.css) and
 go your own path.
 
-If you want to process the page prior to fragmenting it, then see [`src/index.js`](src/index.js);
+If you want to process the page prior to fragmenting it, then see [`src/auto.js`](src/auto.js);
 
 ### Layout
 
@@ -34,14 +34,14 @@ Otherwise, all content on the page will used.  `<header>` and `<footer>` element
 (see below).
 
 You may use CSS to modify the appearance of particular page, but avoid using `:last-child` or `nth-last-child` selectors on `.page`
-as the fragmentation is calculated one page at a time, and the current page in the calculate will always match these selectors.
+as the fragmentation is calculated one page at a time, and the current page in the calculation will always match these selectors.
 
 Avoid modifying `.page` or `.page-inner` without reading the notes in the CSS as you may break everything.
 
 `data-last-page="true"` is added to the final page.  If adding this caused overflow, an additional page will be added.
 
 ```html
-<body data-page-count="3" style="--var-page-count:3;" data-page-count="3">
+<body data-page-count="3" style="--var-page-count:3;">
   <div class="page" data-page-number="1" style="--var-page-number:1;">
     <div class="page-inner">
       <div class="page-header"></div> <!-- Optional -->
@@ -68,7 +68,7 @@ Avoid modifying `.page` or `.page-inner` without reading the notes in the CSS as
 
 ### Page size
 
-Set `--page-size` on the body to set the page size.  The values should be valid values for the `@page` `size` property.
+Set `--page-size` on the body to set the page size.  The values should be valid values for the [`@page size`][9] property.
 
 This will be the same for all pages.
 
@@ -105,7 +105,7 @@ body {
 
 ### Headers and footers
 
-You may set headers and footer by included `<header>` and `<footer>` elements that are direct children of `<body>`.
+You may set a header and footer by including a `<header>` and/or `<footer>` element that are direct children of `<body>`.
 These will be cloned onto each page.
 
 If you want to vary the headers and footers on each page, use CSS to show and hide content.  For example
@@ -139,11 +139,11 @@ Page break settings are read from computed CSS values using `window.getComputedS
 
 Supported properties:
 
-- `break-before`: supports `auto`, `avoid` and `page`. Other values will be treated as `auto`.
-- `break-after`: supports `auto`, `avoid` and `page`. Other values will be treated as `auto`.
-- `break-inside`: supports `auto` and `avoid`. Other values will be treated as `auto`.
-- `widows`: Firefox does not support widows, use `--widows` instead. Default is 2. The value must be >= 1
-- `orphans`: Firefox does not support orphans, use `--orphans` instead. Default is 2. The value must be >= 1
+- [`break-before`][10]: supports `auto`, `avoid` and `page`. Other values will be treated as `auto`.
+- [`break-after`][11]: supports `auto`, `avoid` and `page`. Other values will be treated as `auto`.
+- [`break-inside`][12]: supports `auto` and `avoid`. Other values will be treated as `auto`.
+- [`widows`][13]: Firefox does not support widows, use `--widows` instead. Default is 2. The value must be >= 1
+- [`orphans`][14]: Firefox does not support orphans, use `--orphans` instead. Default is 2. The value must be >= 1
 
 ### Tables
 
@@ -224,3 +224,9 @@ npm build
 [6]: https://www.w3.org/TR/css-break-3/
 [7]: https://www.w3.org/TR/css-break-3/#end-block
 [8]: https://www.w3.org/TR/css-break-3/#unforced-breaks
+[9]: https://developer.mozilla.org/en-US/docs/Web/CSS/@page/size
+[10]: https://developer.mozilla.org/en-US/docs/Web/CSS/break-before
+[11]: https://developer.mozilla.org/en-US/docs/Web/CSS/break-after
+[12]: https://developer.mozilla.org/en-US/docs/Web/CSS/break-inside
+[13]: https://developer.mozilla.org/en-US/docs/Web/CSS/widows
+[14]: https://developer.mozilla.org/en-US/docs/Web/CSS/orphans
