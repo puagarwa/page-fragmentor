@@ -41,22 +41,22 @@ Avoid modifying `.page` or `.page-inner` without reading the notes in the CSS as
 `data-last-page="true"` is added to the final page.  If adding this caused overflow, an additional page will be added.
 
 ```html
-<body data-page-count="3" style="--var-page-count:3;">
-  <div class="page" data-page-number="1" style="--var-page-number:1;">
+<body data-page-count="3" style="--page-count:3;">
+  <div class="page" data-page-number="1" style="--page-number:1;">
     <div class="page-inner">
       <div class="page-header"></div> <!-- Optional -->
       <div class="page-content"></div>
       <div class="page-footer"></div> <!-- Optional -->
     </div>
   </div>
-  <div class="page" data-page-number="2" style="--var-page-number:2;">
+  <div class="page" data-page-number="2" style="--page-number:2;">
     <div class="page-inner">
       <div class="page-header"></div> <!-- Optional -->
       <div class="page-content"></div>
       <div class="page-footer"></div> <!-- Optional -->
     </div>
   </div>
-  <div class="page" data-last-page="true" data-page-number="3" style="--var-page-number:3;">
+  <div class="page" data-last-page="true" data-page-number="3" style="--page-number:3;">
     <div class="page-inner">
       <div class="page-header"></div> <!-- Optional -->
       <div class="page-content"></div>
