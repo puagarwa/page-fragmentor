@@ -31,7 +31,10 @@ export class SiblingBreakPoint extends BaseBreakPoint {
     if (!node || (node === Node.ELEMENT_NODE && node.matches('td,th'))) {
       return null;
     }
-    if (!force && !disableBreakRules.includes(2) && this.nodeRules.get(node).breakInsideAvoid) {
+    if (!force
+      && !disableBreakRules.includes(2)
+      && this.nodeRules.get(node).breakInsideParentAvoid
+    ) {
       return null;
     }
     if (!force && !disableBreakRules.includes(1) && avoid) {
