@@ -10,6 +10,9 @@ function calculateBottomSpace(container) {
   return Math.ceil(Math.max(size, 0));
 }
 
+/**
+ * Represents a class B breakpoint
+ */
 export class InlineBreakPoint extends BaseBreakPoint {
   constructor(...args) {
     super(...args);
@@ -49,6 +52,10 @@ export class InlineBreakPoint extends BaseBreakPoint {
     return range;
   }
 
+  // Internals
+  // ---------
+
+  // Find the first overflowing linebox obeying widow and orphan rules
   findLineBoxRange(relaxWidowsAndOrphans) {
     let { widows, orphans } = this.containerRules;
 
@@ -90,6 +97,8 @@ export class InlineBreakPoint extends BaseBreakPoint {
     return lineBoxes[lineBoxes.length - widows] || null;
   }
 
+  // Find the first overflowing element
+  // If it is not a text node, and not the first node return it
   findFirstOverflowingNodeRange() {
     const foundNode = this.nodes.find((node) => {
       const rect = this.rectFilter.get(node);

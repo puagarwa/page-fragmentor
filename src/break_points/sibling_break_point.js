@@ -1,5 +1,8 @@
 import { BaseBreakPoint } from './base_break_point';
 
+/**
+ * Represents a class A breakpoint
+ */
 export class SiblingBreakPoint extends BaseBreakPoint {
   constructor(...args) {
     super(...args);
@@ -15,6 +18,11 @@ export class SiblingBreakPoint extends BaseBreakPoint {
   get overflowing() {
     return this.leadingNodes.some(this.hasLeadingOverflow, this)
       || this.trailingNodes.some(this.hasTrailingOverflow, this);
+  }
+
+  get avoid() {
+    return this.leadingNodes.some((node) => ['avoid', 'avoid-page'].includes(this.nodeRules.get(node).breakBefore))
+      || this.trailingNodes.some((node) => ['avoid', 'avoid-page'].includes(this.nodeRules.get(node).breakAfter));
   }
 
   range(disableBreakRules = []) {
@@ -36,10 +44,8 @@ export class SiblingBreakPoint extends BaseBreakPoint {
     return range;
   }
 
-  get avoid() {
-    return this.leadingNodes.some((node) => ['avoid', 'avoid-page'].includes(this.nodeRules.get(node).breakBefore))
-      || this.trailingNodes.some((node) => ['avoid', 'avoid-page'].includes(this.nodeRules.get(node).breakAfter));
-  }
+  // Internals
+  // ---------
 
   get node() {
     return this.trailingNodes[this.trailingNodes.length - 1];
