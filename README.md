@@ -20,10 +20,10 @@ Include the provided 'auto' script and the provided css on the page.
 
 The page will be fragmented into printable pages.
 
-Configuration is done via CSS.  You can either following the guidance below, or read the CSS and
+Configuration is done via CSS.  You can either following the guidance below, or read the [CSS](styles/styles.css) and
 go your own path.
 
-If you want to process the page prior to fragmenting it, then see (`src/index.js`)[src/index.js];
+If you want to process the page prior to fragmenting it, then see [`src/index.js`](src/index.js);
 
 ### Layout
 
