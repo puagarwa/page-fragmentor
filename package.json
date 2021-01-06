@@ -10,7 +10,8 @@
     "build": "npm run build:main && npm run build:auto",
     "build:main": "parcel build src/index.js",
     "build:auto": "parcel build src/auto.js",
-    "version": "npm run lint",
+    "preversion": "npm run lint",
+    "prepublishOnly": "npm run build",
     "release": "np"
   },
   "author": "Daniel Lewis",
