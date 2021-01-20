@@ -1,6 +1,6 @@
 {
   "name": "@citizensadvice/page-fragmenter",
-  "version": "1.0.0-rc1",
+  "version": "1.0.0-rc2",
   "description": "Split a HTML page into printable pages",
   "scripts": {
     "test": "jest",
