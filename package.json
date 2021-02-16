@@ -3,7 +3,7 @@
   "version": "1.0.0-rc2",
   "description": "Split a HTML page into printable pages",
   "scripts": {
-    "test": "jest --maxWorkers=1",
+    "test": "jest --maxWorkers=2",
     "lint": "eslint . --ext .js",
     "start": "parcel test/index.html --dist-dir local",
     "prebuild": "rm -rf dist",
