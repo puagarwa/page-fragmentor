@@ -50,7 +50,7 @@ export class TableExtractor {
       // Remove fixed widths
       [...table.querySelectorAll('col[data-fragmentation-col]')].forEach((col) => col.remove());
       // Add in thead
-      if (!newTable.tHead) {
+      if (!newTable.tHead && table.tHead) {
         newTable.tHead = table.tHead.cloneNode(true);
       }
       // Remove duplicated uuid
