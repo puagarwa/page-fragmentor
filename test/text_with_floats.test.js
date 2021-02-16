@@ -1,6 +1,6 @@
-test.jestPlaywrightConfig(
+it.jestPlaywrightSkip(
   {
-    browsers: ['webkit'],
+    browsers: ['chromium', 'firefox'],
   },
   'is three pages', async () => {
   await page.goto('http://localhost:1234/text_with_floats.html', { waitUntil: 'load' });

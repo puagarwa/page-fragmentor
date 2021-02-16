@@ -1,6 +1,6 @@
-test.jestPlaywrightConfig(
+it.jestPlaywrightSkip(
   {
-    browsers: ['webkit'],
+    browsers: ['chromium', 'firefox'],
   },
   'headers', async () => {
   await page.goto('http://localhost:1234/headers.html', { waitUntil: 'load' });

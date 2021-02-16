@@ -1,8 +1,8 @@
-test.jestPlaywrightConfig(
+it.jestPlaywrightSkip(
   {
-    browsers: ['chromium', 'firefox'],
+    browsers: ['webkit'],
   },
   'is three pages', async () => {
-  await page.goto('http://localhost:1234/text_with_image.html', { waitUntil: 'load' });
-  expect(await page.$$('.page')).toHaveLength(3);
-});
+    await page.goto('http://localhost:1234/text_with_image.html', { waitUntil: 'load' });
+    expect(await page.$$('.page')).toHaveLength(3);
+  });
