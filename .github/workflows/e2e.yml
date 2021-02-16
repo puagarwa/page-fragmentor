@@ -22,7 +22,9 @@ jobs:
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}  
+        node-version: ${{ matrix.node-version }}
+    - name: Setup Playwright for testing 
+      uses: microsoft/playwright-github-action@v1    
     - name: Run Tests
       continue-on-error: true
       run: |
@@ -32,6 +34,6 @@ jobs:
         dstat -n > network.txt &
         npm run test
     - name: Show CPU usage stats
-      run: cat src/cpu.txt
+      run: cat cpu.txt
     - name: Show Network usage stats
-      run: cat src/network.txt 
+      run: cat network.txt 
