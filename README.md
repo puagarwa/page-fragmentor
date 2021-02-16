@@ -207,7 +207,7 @@ npm install
 
 # Start
 npm start
-# Visit http://10.244.1.5:1234
+# Visit http://localhost:1234
 
 # Test
 npm test
