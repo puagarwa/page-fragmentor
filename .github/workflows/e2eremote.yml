@@ -32,7 +32,7 @@ jobs:
         sudo apt-get install dstat
         dstat -c > cpu.txt &
         dstat -n > network.txt &
-        npm run test
+        DEBUG=pw:api npm run test
     - name: Show CPU usage stats
       run: cat cpu.txt
     - name: Show Network usage stats
