@@ -1,0 +1,39 @@
+name: E2E Remote Tests
+
+on:
+  push:
+    branches: [ e2eremote ]
+  pull_request:
+    branches: [ e2eremote ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [15.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v2      
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Setup Playwright for testing 
+      uses: microsoft/playwright-github-action@v1    
+    - name: Run Tests
+      continue-on-error: true
+      run: |
+        npm install
+        sudo apt-get install dstat
+        dstat -c > cpu.txt &
+        dstat -n > network.txt &
+        npm run test
+    - name: Show CPU usage stats
+      run: cat cpu.txt
+    - name: Show Network usage stats
+      run: cat network.txt 
