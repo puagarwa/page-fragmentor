@@ -28,6 +28,8 @@ jobs:
     - name: Run Tests
       continue-on-error: true
       run: |
+        cd jest-playwright-worker && npm install
+        cd ..
         npm install
         sudo apt-get install dstat
         dstat -c > cpu.txt &
