@@ -1,6 +1,5 @@
 const axios = require('axios');
 const https = require('https');
-const http = require('http');
 const fs = require('fs');
 
 async function request(apiUrl, payload, certLocation, keyLocation) {

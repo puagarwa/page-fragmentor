@@ -24,18 +24,23 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - name: Setup Playwright for testing 
-      uses: microsoft/playwright-github-action@v1    
+      uses: microsoft/playwright-github-action@v1
+    - name: Get branch name (merge)
+      if: github.event_name != 'pull_request'
+      shell: bash
+      run: echo "BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | tr / -)" >> $GITHUB_ENV
+    - name: Get branch name (pull request)
+      if: github.event_name == 'pull_request'
+      shell: bash
+      run: echo "BRANCH_NAME=$(echo ${GITHUB_HEAD_REF} | tr / -)" >> $GITHUB_ENV  
     - name: Run Tests
       continue-on-error: true
       run: |
         cd jest-playwright-reporter && npm install
         cd ..
         npm install
-        sudo apt-get install dstat
-        dstat -c > cpu.txt &
-        dstat -n > network.txt &
         npm run test
-    - name: Show CPU usage stats
-      run: cat cpu.txt
-    - name: Show Network usage stats
-      run: cat network.txt 
+      env: 
+        ENDPOINT: ${{secrets.ENDPOINT}}
+        ACCOUNT_ID: ${{secrets.ACCOUNT_ID}}
+        BRANCH_NAME: ${{env.BRANCH_NAME}}

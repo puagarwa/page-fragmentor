@@ -1,6 +1,5 @@
 const callAPI = require('./helpers');
 const TestSuiteInfo = require('./models/TestSuiteInfo');
-const TestCaseInfo = require('./models/TestCaseInfo');
 const RunInfo = require('./models/RunInfo');
 
 class PlaywrightReporter {
@@ -13,18 +12,20 @@ class PlaywrightReporter {
   constructor(globalConfig, options = {}) {
     this._globalConfig = globalConfig;
     this.options = options;
-    this.postRunUrl = options.postRunUrl;
-    this.postTestUrl = options.postTestUrl;
-    this.runId = options.runId;
-    this.workflowId = options.workflowId;
-    this.workflowName = options.workflowName;
-    this.workflowUrl = options.workflowUrl;
-    this.repo = options.repo;
     this.accountId = options.accountId;
-    this.branch = options.branch;
+    this.runId = options.runId ? options.runId : process.env.GITHUB_RUN_ID;
+    this.postRunUrl = options.postRunUrl ? options.postRunUrl
+      : `http://${process.env.ENDPOINT}/api/${this.accountId}/runs`;
+    this.postTestUrl = options.postTestUrl ? options.postTestUrl
+      : `http://${process.env.ENDPOINT}/api/${this.accountId}/runs/${this.runId}/tests`;
+    this.workflowId = options.workflowId;
+    this.workflowName = options.workflowName ? options.workflowName : process.env.GITHUB_WORKFLOW;
+    this.workflowUrl = options.workflowUrl;
+    this.repo = options.repo ? options.repo : process.env.GITHUB_REPOSITORY;
+    this.branch = options.branch ? options.branch : process.env.BRANCH_NAME;
     this.triggerType = options.triggerType;
-    this.triggerId = options.triggerId;
-    this.triggerUrl = options.triggerUrl;
+    this.triggerId = options.triggerId ? options.triggerId : process.env.GITHUB_SHA;
+    this.triggerUrl = `https://www.github.com/${this.repo}/commit/${this.triggerId}`;
     this.testIdCounter = 1;
   }
 
