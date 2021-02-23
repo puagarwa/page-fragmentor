@@ -12,7 +12,7 @@ class PlaywrightReporter {
   constructor(globalConfig, options = {}) {
     this._globalConfig = globalConfig;
     this.options = options;
-    this.accountId = options.accountId;
+    this.accountId = options.accountId ? options.accountId : process.env.ACCOUNT_ID;
     this.runId = options.runId ? options.runId : process.env.GITHUB_RUN_ID;
     this.postRunUrl = options.postRunUrl ? options.postRunUrl
       : `http://${process.env.ENDPOINT}/api/${this.accountId}/runs`;
