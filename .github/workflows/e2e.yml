@@ -28,7 +28,7 @@ jobs:
     - name: Run Tests
       continue-on-error: true
       run: |
-        cd jest-playwright-worker && npm install
+        cd jest-playwright-reporter && npm install
         cd ..
         npm install
         sudo apt-get install dstat
