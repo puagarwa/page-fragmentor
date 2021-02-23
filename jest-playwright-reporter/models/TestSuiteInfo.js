@@ -11,6 +11,9 @@ class TestSuiteInfo {
     let i;
     this.tests = [];
     for (i = 0; i < testResult.testResults.length; i += 1) {
+      if (testResult.testResults[i].status === 'pending') {
+        continue;
+      }
       const testCaseInfo = new TestCaseInfo(testResult.testResults[i]);
       this.tests.push(testCaseInfo);
     }

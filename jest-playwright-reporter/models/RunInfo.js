@@ -7,7 +7,7 @@ class RunInfo {
     this.numFailedTests = runResult.numFailedTests;
     this.numPassedTests = runResult.numPassedTests;
     this.startTime = runResult.startTime;
-    this.status = runResult.success === false ? 'failed' : 'passed';
+    this.status = runResult.success ? 'passed' : 'failed';
   }
 }
 
