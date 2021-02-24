@@ -26,7 +26,7 @@ class PlaywrightReporter {
     this.triggerType = options.triggerType;
     this.triggerId = options.triggerId ? options.triggerId : process.env.GITHUB_SHA;
     this.triggerUrl = `https://www.github.com/${this.repo}/commit/${this.triggerId}`;
-    this.testIdCounter = 1;
+    this.testIdCounter = Number(process.env.ID);
   }
 
   onRunStart() {
