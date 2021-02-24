@@ -6,7 +6,7 @@ module.exports = {
     },
   },
   testTimeout: 30000,
-  //modulePathIgnorePatterns: ['ignored'],
+  // modulePathIgnorePatterns: ['ignored'],
   reporters: ['default', 
     ['./jest-playwright-reporter/PlaywrightReporter.js', 
       {
