@@ -11,6 +11,7 @@ const testResultsFileZipped = './testResults.zip';
 
 async function getSasUri(runId, accountId) {
   const sasApiUrl = `http://${process.env.ENDPOINT}/api/${accountId}/sasuri?runId=${runId}`;
+  console.log(sasApiUrl);
   const config = await getSasTokenConfig(
     'get',
     sasApiUrl,
@@ -79,8 +80,8 @@ async function registerRunResults(runResult, runInfo, postRunUrl) {
     testSuiteInfo.tests = testCases;
     testSuites.push(testSuiteInfo);
   }
-  const sasUri = getSasUri(runInfo.id, runInfo.accountId);
-  registerTestResults(runInfo.id, testSuites, sasUri);
+  const sasUriObject = JSON.parse(getSasUri(runInfo.id, runInfo.accountId));
+  registerTestResults(runInfo.id, testSuites, sasUriObject.sasUri);
 }
 
 module.exports = registerRunResults;
