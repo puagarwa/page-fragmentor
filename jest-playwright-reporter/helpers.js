@@ -11,7 +11,6 @@ const testResultsFileZipped = './testResults.zip';
 
 async function getSasUri(runId, accountId) {
   const sasApiUrl = `http://${process.env.ENDPOINT}/api/${accountId}/sasuri?runId=${runId}`;
-  console.log(sasApiUrl);
   const config = await getSasTokenConfig(
     'get',
     sasApiUrl,
@@ -21,7 +20,9 @@ async function getSasUri(runId, accountId) {
     // eslint-disable-next-line no-console
     console.log(response);
   }
-  return response.data;
+  console.log(response);
+  const sasUriObject = JSON.parse(response.data);
+  return sasUriObject.sasUri;
 }
 
 async function createBlobInContainer(containerClient, file) {
@@ -80,8 +81,8 @@ async function registerRunResults(runResult, runInfo, postRunUrl) {
     testSuiteInfo.tests = testCases;
     testSuites.push(testSuiteInfo);
   }
-  const sasUriObject = JSON.parse(getSasUri(runInfo.id, runInfo.accountId));
-  registerTestResults(runInfo.id, testSuites, sasUriObject.sasUri);
+  const sasUri = getSasUri(runInfo.id, runInfo.accountId);
+  registerTestResults(runInfo.id, testSuites, sasUri);
 }
 
 module.exports = registerRunResults;
