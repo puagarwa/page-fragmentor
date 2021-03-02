@@ -1,5 +1,4 @@
-const callAPI = require('./helpers');
-const TestSuiteInfo = require('./models/TestSuiteInfo');
+const registerRunResults = require('./helpers');
 const RunInfo = require('./models/RunInfo');
 
 class PlaywrightReporter {
@@ -14,10 +13,9 @@ class PlaywrightReporter {
     this.options = options;
     this.accountId = options.accountId ? options.accountId : process.env.ACCOUNT_ID;
     this.runId = options.runId ? options.runId : process.env.GITHUB_RUN_ID;
-    this.postRunUrl = options.postRunUrl ? options.postRunUrl
-      : `http://${process.env.ENDPOINT}/api/${this.accountId}/runs`;
-    this.postTestUrl = options.postTestUrl ? options.postTestUrl
-      : `http://${process.env.ENDPOINT}/api/${this.accountId}/runs/${this.runId}/tests`;
+    // this.postRunUrl = options.postRunUrl ? options.postRunUrl
+    //  : `http://${process.env.ENDPOINT}/api/${this.accountId}/runs`;
+    this.postRunUrl = `http://localhost:5000/api/${this.accountId}/runs`;
     this.workflowId = options.workflowId;
     this.workflowName = options.workflowName ? options.workflowName : process.env.GITHUB_WORKFLOW;
     this.workflowUrl = options.workflowUrl;
@@ -34,42 +32,26 @@ class PlaywrightReporter {
 
   /**
    * @param {string} test - The Test last run
-   * @param {JestTestRunResult} runResult - Results from the test run
+   * @param {TestRunResult} runResult - Results from the test run
    */
   onRunComplete(test, runResult) {
-    const runResultInfo = new RunInfo(runResult);
-    runResultInfo.id = this.runId;
-    runResultInfo.accountId = this.accountId;
-    runResultInfo.workflowId = this.workflowId;
-    runResultInfo.workflowName = this.workflowName;
-    runResultInfo.workflowUrl = this.workflowUrl;
-    runResultInfo.repo = this.repo;
-    runResultInfo.branch = this.branch;
-    runResultInfo.triggerType = this.triggerType;
-    runResultInfo.triggerId = this.triggerId;
-    runResultInfo.triggerUrl = this.triggerUrl;
-    runResultInfo.endTime = Date.now();
+    const runInfo = new RunInfo(runResult);
+    runInfo.id = this.runId;
+    runInfo.accountId = this.accountId;
+    runInfo.workflowId = this.workflowId;
+    runInfo.workflowName = this.workflowName;
+    runInfo.workflowUrl = this.workflowUrl;
+    runInfo.repo = this.repo;
+    runInfo.branch = this.branch;
+    runInfo.triggerType = this.triggerType;
+    runInfo.triggerId = this.triggerId;
+    runInfo.triggerUrl = this.triggerUrl;
+    runInfo.endTime = Date.now();
 
-    callAPI(this.postRunUrl, runResultInfo);
+    registerRunResults(runResult, runInfo, this.postRunUrl);
   }
 
-  /**
-   * @param {JestTestSuiteRunConfig} testRunConfig - Context information about the test run
-   * @param {JestTestSuiteResult} testSuiteResult - Results for the test suite just executed
-   * @param {JestTestRunResult} runResult - Results for the test run at the point in time of the test suite being executed
-   */
-  onTestResult(testRunConfig, testSuiteResult, runResult) {
-    const testSuiteInfo = new TestSuiteInfo(testSuiteResult);
-    testSuiteInfo.runId = this.runId;
-    testSuiteInfo.accountId = this.accountId;
-    testSuiteInfo.id = this.testIdCounter.toString();
-    this.testIdCounter += 1;
-    // let i;
-    // for (i = 0; i < testSuiteResult.testResults.length; i += 1) {
-    //   const testCaseInfo = new TestCaseInfo(testSuiteResult.testResults[i]);
-    //   testSuiteInfo.testCaseInfos.push(testCaseInfo);
-    // }
-    callAPI(this.postTestUrl, testSuiteInfo);
+  onTestResult() {
   }
 }
 

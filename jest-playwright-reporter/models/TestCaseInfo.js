@@ -1,5 +1,6 @@
 class TestCaseInfo {
-  constructor(testCaseResult) {
+  constructor(id, testCaseResult) {
+    this.id = id;
     this.duration = testCaseResult.duration;
     this.name = testCaseResult.fullName;
     this.status = testCaseResult.status;
