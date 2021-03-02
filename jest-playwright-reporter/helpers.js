@@ -10,11 +10,10 @@ const testResultsFile = './testResults.json';
 const testResultsFileZipped = './testResults.zip';
 
 async function getSasUri(runId, accountId) {
-  const sasApiUrl = `http://${process.env.ENDPOINT}/api/${accountId}/sasuri`;
+  const sasApiUrl = `http://${process.env.ENDPOINT}/api/${accountId}/sasuri?runId=${runId}`;
   const config = await getSasTokenConfig(
     'get',
     sasApiUrl,
-    runId,
   );
   const response = await callAPI(config);
   if (response.status !== '200') {
@@ -59,7 +58,7 @@ async function registerRunResults(runResult, runInfo, postRunUrl) {
       JSON.stringify(runInfo),
     );
     const response = await callAPI(config);
-    if (response.status !== '201') {
+    if (response.status !== '200') {
       // eslint-disable-next-line no-console
       console.log(response);
     }

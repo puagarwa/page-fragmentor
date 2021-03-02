@@ -17,13 +17,10 @@ async function getPostRunConfig(method, url, payload) {
   return config;
 }
 
-async function getSasTokenConfig(method, url, runId) {
+async function getSasTokenConfig(method, url) {
   const config = {
     url,
     method,
-    params: {
-      runId: runId,
-    },
     headers: {
       'Content-Type': 'application/json',
       'Accept': '*/*',

@@ -11,6 +11,7 @@ module.exports = {
     ['./jest-playwright-reporter/PlaywrightReporter.js', 
       {
         'workflowId': '12',
+        'accountId': '123',
         'workflowUrl': 'https://github.com/pratiksharma23/page-fragmentor/actions/workflows/e2e.yml',
         'triggerType': 'Commit'
       }
