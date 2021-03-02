@@ -1,5 +1,5 @@
 const childProcess = require('child_process');
-const BlobServiceClient = require('@azure/storage-blob');
+const storage = require('@azure/storage-blob');
 const fs = require('fs');
 const { getPostRunConfig, getSasTokenConfig, callAPI } = require('./httpClient');
 const TestCaseInfo = require('./models/TestCaseInfo');
@@ -35,7 +35,7 @@ async function registerTestResults(runId, testSuites, sasUri) {
   fs.writeFileSync(testResultsFile, JSON.stringify(testSuites));
   childProcess.execSync(`zip testResults ${testResultsFile}`);
   if (fs.existsSync(testResultsFileZipped) && sasUri && runId) {
-    const blobService = new BlobServiceClient(`${sasUri}`);
+    const blobService = new storage.BlobServiceClient(`${sasUri}`);
     const containerClient = blobService.getContainerClient(runId);
     // await containerClient.createIfNotExists({
     //   access: 'container',
