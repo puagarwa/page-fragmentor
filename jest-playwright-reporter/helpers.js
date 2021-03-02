@@ -33,18 +33,22 @@ async function createBlobInContainer(containerClient, file) {
 }
 
 async function registerTestResults(runId, testSuites, sasUri) {
-  fs.writeFileSync(testResultsFile, JSON.stringify(testSuites));
-  childProcess.execSync(`zip testResults ${testResultsFile}`);
-  if (fs.existsSync(testResultsFileZipped) && sasUri && runId) {
-    const blobService = new storage.BlobServiceClient(`${sasUri}`);
-    const containerClient = blobService.getContainerClient(runId);
-    // await containerClient.createIfNotExists({
-    //   access: 'container',
-    // });
-    // upload file
-    await createBlobInContainer(containerClient, testResultsFileZipped);
+  try {
+    fs.writeFileSync(testResultsFile, JSON.stringify(testSuites));
+    childProcess.execSync(`zip testResults ${testResultsFile}`);
+    if (fs.existsSync(testResultsFileZipped) && sasUri && runId) {
+      const blobService = new storage.BlobServiceClient(`${sasUri}`);
+      const containerClient = blobService.getContainerClient(runId);
+      // await containerClient.createIfNotExists({
+      //   access: 'container',
+      // });
+      // upload file
+      await createBlobInContainer(containerClient, testResultsFileZipped);
+      // await uploadArtifacts(containerClient);
+    } 
+  } catch (error) {
+    console.log(error);
   }
-  // await uploadArtifacts(containerClient);
 }
 
 // async function uploadArtifacts(containerClient) {
@@ -82,6 +86,7 @@ async function registerRunResults(runResult, runInfo, postRunUrl) {
     testSuites.push(testSuiteInfo);
   }
   const sasUri = getSasUri(runInfo.id, runInfo.accountId);
+  console.log(sasUri);
   registerTestResults(runInfo.id, testSuites, sasUri);
 }
 
