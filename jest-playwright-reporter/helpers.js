@@ -5,7 +5,6 @@ const { getPostRunConfig, getSasTokenConfig, callAPI } = require('./httpClient')
 const TestCaseInfo = require('./models/TestCaseInfo');
 const TestSuiteInfo = require('./models/TestSuiteInfo');
 
-// const artifactsDir = process.env.ARTIFACTS_DIR;
 const testResultsFile = './testResults.json';
 const testResultsFileZipped = './testResults.zip';
 
@@ -34,19 +33,14 @@ async function registerTestResults(runId, testSuites, sasUri) {
       const blobService = new storage.BlobServiceClient(`${sasUri}`);
       const containerClient = blobService.getContainerClient(runId);
       await createBlobInContainer(containerClient, testResultsFileZipped);
-      // await uploadArtifacts(containerClient);
     }
   } catch (error) {
     console.log(error);
   }
 }
 
-// async function uploadArtifacts(containerClient) {
-// }
-
 async function registerRunResults(runResult, runInfo, postRunUrl) {
   try {
-    // eslint-disable-next-line no-unused-vars
     // POST run results
     const config = await getPostRunConfig(
       'post',
