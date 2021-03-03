@@ -16,8 +16,7 @@ async function getSasUri(runId, accountId) {
     sasApiUrl,
   );
   const response = await callAPI(config);
-  const sasUriObject = JSON.parse(response.data);
-  return sasUriObject.sasUri;
+  return response.data.sasUri;
 }
 
 async function createBlobInContainer(containerClient, file) {
@@ -54,11 +53,7 @@ async function registerRunResults(runResult, runInfo, postRunUrl) {
       postRunUrl,
       JSON.stringify(runInfo),
     );
-    const response = await callAPI(config);
-    if (response.status !== '200') {
-      // eslint-disable-next-line no-console
-      console.log(response);
-    }
+    await callAPI(config);
   } catch (error) {
     console.log('Exception while posting run results.');
   }
