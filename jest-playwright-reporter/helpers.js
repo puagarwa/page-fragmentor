@@ -20,7 +20,6 @@ async function getSasUri(runId, accountId) {
     // eslint-disable-next-line no-console
     console.log(response);
   }
-  console.log(response);
   const sasUriObject = JSON.parse(response.data);
   return sasUriObject.sasUri;
 }
@@ -34,18 +33,15 @@ async function createBlobInContainer(containerClient, file) {
 
 async function registerTestResults(runId, testSuites, sasUri) {
   try {
+    console.log(sasUri);
     fs.writeFileSync(testResultsFile, JSON.stringify(testSuites));
     childProcess.execSync(`zip testResults ${testResultsFile}`);
     if (fs.existsSync(testResultsFileZipped) && sasUri && runId) {
       const blobService = new storage.BlobServiceClient(`${sasUri}`);
       const containerClient = blobService.getContainerClient(runId);
-      // await containerClient.createIfNotExists({
-      //   access: 'container',
-      // });
-      // upload file
       await createBlobInContainer(containerClient, testResultsFileZipped);
       // await uploadArtifacts(containerClient);
-    } 
+    }
   } catch (error) {
     console.log(error);
   }
