@@ -9,7 +9,7 @@ const testResultsFile = './testResults.json';
 const testResultsFileZipped = './testResults.zip';
 
 async function getSasUri(runId, accountId) {
-  const sasApiUrl = `http://${process.env.ENDPOINT}/api/${accountId}/sasuri?runId=${runId}`;
+  const sasApiUrl = `https://${process.env.ENDPOINT}/api/${accountId}/sasuri?runId=${runId}`;
   const config = await getSasTokenConfig(
     'get',
     sasApiUrl,

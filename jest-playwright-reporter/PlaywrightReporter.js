@@ -14,7 +14,7 @@ class PlaywrightReporter {
     this.accountId = options.accountId ? options.accountId : process.env.ACCOUNT_ID;
     this.runId = options.runId ? options.runId : process.env.GITHUB_RUN_ID;
     this.postRunUrl = options.postRunUrl ? options.postRunUrl
-      : `http://${process.env.ENDPOINT}/api/${this.accountId}/runs`;
+      : `https://${process.env.ENDPOINT}/api/${this.accountId}/runs`;
     this.workflowId = options.workflowId;
     this.workflowName = options.workflowName ? options.workflowName : process.env.GITHUB_WORKFLOW;
     this.workflowUrl = options.workflowUrl;
