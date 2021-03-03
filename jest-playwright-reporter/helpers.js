@@ -16,10 +16,6 @@ async function getSasUri(runId, accountId) {
     sasApiUrl,
   );
   const response = await callAPI(config);
-  if (response.status !== '200') {
-    // eslint-disable-next-line no-console
-    console.log(response);
-  }
   const sasUriObject = JSON.parse(response.data);
   return sasUriObject.sasUri;
 }
@@ -33,7 +29,6 @@ async function createBlobInContainer(containerClient, file) {
 
 async function registerTestResults(runId, testSuites, sasUri) {
   try {
-    console.log(sasUri);
     fs.writeFileSync(testResultsFile, JSON.stringify(testSuites));
     childProcess.execSync(`zip testResults ${testResultsFile}`);
     if (fs.existsSync(testResultsFileZipped) && sasUri && runId) {
@@ -81,9 +76,8 @@ async function registerRunResults(runResult, runInfo, postRunUrl) {
     testSuiteInfo.tests = testCases;
     testSuites.push(testSuiteInfo);
   }
-  const sasUri = getSasUri(runInfo.id, runInfo.accountId);
-  console.log(sasUri);
-  registerTestResults(runInfo.id, testSuites, sasUri);
+  const sasUri = await getSasUri(runInfo.id, runInfo.accountId);
+  await registerTestResults(runInfo.id, testSuites, sasUri);
 }
 
 module.exports = registerRunResults;
