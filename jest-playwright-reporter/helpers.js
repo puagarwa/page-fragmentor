@@ -33,8 +33,7 @@ async function registerTestResults(runId, testSuites, sasUri) {
     if (fs.existsSync(testResultsFileZipped) && sasUri && runId) {
       const blobService = new storage.BlobServiceClient(`${sasUri}`);
       const containerClient = blobService.getContainerClient(runId);
-      await containerClient.uploadBlockBlob(testResultsFileZipped);
-      // await createBlobInContainer(containerClient, testResultsFileZipped);
+      await createBlobInContainer(containerClient, testResultsFileZipped);
       // await uploadArtifacts(containerClient);
     }
   } catch (error) {
